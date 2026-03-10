@@ -57,7 +57,6 @@
             background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
             border-right: 1px solid rgba(255,255,255,0.05);
         }
-        .story-icon-area svg { width: 100px; height: 100px; stroke: #ffffff; stroke-width: 1.5; fill: none; }
 
         .story-text { width: 60%; padding: 40px; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; }
         .story-text h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); font-weight: 700; margin-bottom: 15px; color: #f5f5f7; }
@@ -108,10 +107,7 @@
         button.action-btn { padding: 12px 16px; border: 1px solid #d2d2d7; background: #fff; border-radius: 10px; cursor: pointer; font-family: inherit; font-size: 14px; font-weight: 500; text-align: left; transition: 0.2s; }
         button.action-btn:hover { background: #f5f5f7; }
         
-        /* 入力欄のスタイル */
         .custom-input { padding: 12px; border-radius: 10px; border: 1px solid #d2d2d7; font-size: 14px; font-family: inherit; }
-        
-        /* 保存ボタンの特別なスタイル */
         .save-btn { background: #007aff !important; color: #fff !important; border: none !important; text-align: center !important; font-weight: 700 !important; margin-top: 10px; }
         .save-btn:hover { background: #0062cc !important; }
 
@@ -138,9 +134,54 @@
     <div class="story-section" id="story-trigger">
         <div class="sticky-wrapper">
             <div class="horizontal-scroll" id="horizontal-target">
-                <div class="story-panel"><div class="story-card"><div class="story-icon-area"><svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><line x1="20" y1="4" x2="8.12" y2="15.88"></line></svg></div><div class="story-text"><h2 data-i18n="story1_title">1. 地域の廃材</h2><p data-i18n="story1_desc">捨てられる運命にあった着物の端切れを救い出します。</p></div></div></div>
-                <div class="story-panel"><div class="story-card"><div class="story-icon-area"><svg viewBox="0 0 24 24"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path></svg></div><div class="story-text"><h2 data-i18n="story2_title">2. アップサイクル</h2><p data-i18n="story2_desc">伝統技術で、新しい価値を持つお守りへと作り変えます。</p></div></div></div>
-                <div class="story-panel"><div class="story-card"><div class="story-icon-area"><svg viewBox="0 0 24 24"><path d="M12 2L5 6v12l7 4 7-4V6z"></path></svg></div><div class="story-text"><h2 data-i18n="story3_title">3. お守りの誕生</h2><p data-i18n="story3_desc">SDGsの願いを込め、世界中へ届けるお土産が完成します。</p></div></div></div>
+                <div class="story-panel">
+                    <div class="story-card">
+                        <div class="story-icon-area">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:80px; height:80px;">
+                                <circle cx="6" cy="6" r="3"></circle>
+                                <circle cx="6" cy="18" r="3"></circle>
+                                <line x1="20" y1="4" x2="8.12" y2="15.88"></line>
+                                <line x1="14.47" y1="14.48" x2="20" y2="20"></line>
+                                <line x1="8.12" y1="8.12" x2="12" y2="12"></line>
+                            </svg>
+                        </div>
+                        <div class="story-text">
+                            <h2 data-i18n="story1_title">1. 地域の廃材</h2>
+                            <p data-i18n="story1_desc">捨てられる運命にあった着物の端切れを救い出します。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="story-panel">
+                    <div class="story-card">
+                        <div class="story-icon-area">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:80px; height:80px;">
+                                <path d="M23 4v6h-6"></path>
+                                <path d="M1 20v-6h6"></path>
+                                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path>
+                                <path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"></path>
+                            </svg>
+                        </div>
+                        <div class="story-text">
+                            <h2 data-i18n="story2_title">2. アップサイクル</h2>
+                            <p data-i18n="story2_desc">伝統技術で、新しい価値を持つお守りへと作り変えます。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="story-panel">
+                    <div class="story-card">
+                        <div class="story-icon-area">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:80px; height:80px;">
+                                <path d="M12 2L5 6v12l7 4 7-4V6z"></path>
+                                <circle cx="12" cy="12" r="2"></circle>
+                                <path d="M12 7v2M12 15v2M7 12h2M15 12h2"></path>
+                            </svg>
+                        </div>
+                        <div class="story-text">
+                            <h2 data-i18n="story3_title">3. お守りの誕生</h2>
+                            <p data-i18n="story3_desc">SDGsの願いを込め、世界中へ届けるお土産が完成します。</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -189,7 +230,6 @@
         const glare = document.getElementById('glare');
         const scene = document.querySelector('.scene');
 
-        // 3Dエフェクト
         function handleMove(e) {
             const rect = scene.getBoundingClientRect();
             const clientX = e.touches ? e.touches[0].clientX : e.clientX;
@@ -208,7 +248,6 @@
         scene.addEventListener('touchmove', handleMove);
         scene.addEventListener('touchend', handleLeave);
 
-        // 横スクロール
         const storySection = document.getElementById('story-trigger');
         const horizontalTarget = document.getElementById('horizontal-target');
         window.addEventListener('scroll', () => {
@@ -219,14 +258,12 @@
             }
         });
 
-        // 布の変更
         function changePattern(imageUrl, fallbackColor) {
             const bg = document.getElementById('omamori-bg');
             bg.style.backgroundColor = fallbackColor;
             bg.style.backgroundImage = `url('${imageUrl}')`;
         }
 
-        // 自由な願い入力
         function applyCustomWish() {
             const input = document.getElementById('custom-wish-input');
             const wishElement = document.getElementById('omamori-wish');
@@ -237,27 +274,24 @@
             }
         }
 
-        // 画像保存（これ重要！）
         function saveOmamori() {
             const target = document.getElementById('omamori-card');
-            // 一時的に3D回転をリセットして綺麗に撮る
             const originalTransform = target.style.transform;
             target.style.transform = "rotateX(0deg) rotateY(0deg)";
             
             html2canvas(target, { 
                 useCORS: true, 
                 backgroundColor: null,
-                scale: 2 // 高画質にする
+                scale: 2
             }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'my-omamori.png';
                 link.href = canvas.toDataURL();
                 link.click();
-                target.style.transform = originalTransform; // 元に戻す
+                target.style.transform = originalTransform;
             });
         }
 
-        // 言語切り替え
         let currentLang = 'ja';
         const translations = {
             ja: { title: "Global Omamori Project", subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", sim_title: "Create Your Omamori", wish_env: "環境保護" },
