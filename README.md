@@ -1,3 +1,3 @@
-お守りで環境問題解決へ！！
+お守りで環境問題解決に貢献しよう！！
 
-https://itsumray.github.io/GlobalOmamoriProject/
+ウェブサイト：https://itsumray.github.io/GlobalOmamoriProject/
