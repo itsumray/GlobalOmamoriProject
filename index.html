@@ -28,18 +28,10 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* サイト全体の右下固定透かし */
         .site-watermark {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            z-index: 9999;
-            font-size: 14px;
-            color: rgba(0, 0, 0, 0.15);
-            font-weight: 700;
-            letter-spacing: 2px;
-            pointer-events: none;
-            text-transform: uppercase;
+            position: fixed; bottom: 20px; right: 20px; z-index: 9999;
+            font-size: 14px; color: rgba(0, 0, 0, 0.15); font-weight: 700;
+            letter-spacing: 2px; pointer-events: none; text-transform: uppercase;
         }
         
         .lang-switcher {
@@ -58,22 +50,24 @@
             display: inline-block;
         }
 
-        /* ヒーロー */
         .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px;}
         .hero h1 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 8px; }
         .hero p { font-size: clamp(1rem, 3vw, 1.5rem); font-weight: 500; color: var(--sub-text); }
 
-        /* イントロ（ふわっと出るアニメーション） */
-        .intro-section { min-height: 150vh; display: flex; justify-content: center; align-items: center; padding: 0 20px; }
+        /* イントロ・新規背景セクション共通 */
+        .intro-section { min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
         .intro-content { max-width: 900px; text-align: center; }
         .intro-content h2 { font-size: clamp(3rem, 7vw, 5rem); margin-bottom: 50px; line-height: 1.1; }
         .intro-content p { font-size: 1.4rem; line-height: 2; color: var(--sub-text); margin-bottom: 30px; }
         
+        /* ニュースを元にした背景セクション (Appleスタイル) */
+        .background-problem-section { background-color: #fff; }
+        .problem-icon { font-size: 80px; margin-bottom: 30px; display: block; }
+        .highlight-text { color: #1d1d1f; font-weight: 600; }
+
         .reveal { 
-            opacity: 0; 
-            transform: translateY(60px); 
-            filter: blur(15px); 
-            transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1); /* より滑らかに */
+            opacity: 0; transform: translateY(60px); filter: blur(15px); 
+            transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .reveal.active { opacity: 1; transform: translateY(0); filter: blur(0); }
 
@@ -179,6 +173,15 @@
         </div>
     </section>
 
+    <section class="intro-section background-problem-section">
+        <div class="intro-content reveal">
+            <span class="problem-icon">👘 → 🗑️</span>
+            <h2 data-i18n="prob_h2" style="font-weight: 700;">年間1兆円分の想いが、<br>捨てられています。</h2>
+            <p data-i18n="prob_p1">いま日本では、多くの着物がその価値を失い、行き場をなくしています。<br>災害時や実家の片付けで、「本当は大切にしたいのに」と涙をのんで手放される着物が後を絶ちません。</p>
+            <p data-i18n="prob_p2" class="highlight-text">私たちは、その「捨てられゆく想い」を救い出し、<br>世界中で愛される新しい物語へと紡ぎ直します。</p>
+        </div>
+    </section>
+
     <div class="story-section" id="story-trigger">
         <div class="sticky-wrapper">
             <div class="horizontal-scroll" id="horizontal-target">
@@ -255,14 +258,9 @@
     </div>
 
     <script>
-        // スクロールでふわっと表示する設定
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { 
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('active'); 
-                }
-            });
-        }, { threshold: 0.2 }); // 少し見えたらアニメーション開始
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
+        }, { threshold: 0.2 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         const card = document.getElementById('omamori-card');
@@ -370,8 +368,8 @@
 
         function changeLanguage(lang) {
             const translations = {
-                ja: { title: "Global Omamori Project", subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", intro_h2: "伝統を、<br>未来のカタチへ。", intro_p1: "日本には、古くなったものを慈しみ、新しい命を吹き込む「もったいない」の精神があります。", intro_p2: "私たちは、地域の衣類ゴミとして捨てられるはずだった布地を、世界中の人々を繋ぐ「お守り」へと生まれ変わらせます。", sim_title: "Create Your Omamori", wish_env: "環境保護" },
-                en: { title: "Global Omamori Project", subtitle: "~ Upcycling waste into 'Global Wishes' ~", intro_h2: "Tradition,<br>Reshaped for the Future.", intro_p1: "Japan has a spirit of 'Mottainai'—cherishing old things and breathing new life into them.", intro_p2: "We transform local textile waste into 'Omamori' (charms) that connect people across the globe.", sim_title: "Create Your Omamori", wish_env: "Climate Action" }
+                ja: { title: "Global Omamori Project", subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", intro_h2: "伝統を、<br>未来のカタチへ。", intro_p1: "日本には、古くなったものを慈しみ、新しい命を吹き込む「もったいない」の精神があります。", intro_p2: "私たちは、地域の衣類ゴミとして捨てられるはずだった布地を、世界中の人々を繋ぐ「お守り」へと生まれ変わらせます。", prob_h2: "年間1兆円分の想いが、<br>捨てられています。", prob_p1: "いま日本では、多くの着物がその価値を失い、行き場をなくしています。<br>災害時や実家の片付けで、「本当は大切にしたいのに」と涙をのんで手放される着物が後を絶ちません。", prob_p2: "私たちは、その「捨てられゆく想い」を救い出し、<br>世界中で愛される新しい物語へと紡ぎ直します。", sim_title: "Create Your Omamori", wish_env: "環境保護" },
+                en: { title: "Global Omamori Project", subtitle: "~ Upcycling waste into 'Global Wishes' ~", intro_h2: "Tradition,<br>Reshaped for the Future.", intro_p1: "Japan has a spirit of 'Mottainai'—cherishing old things and breathing new life into them.", intro_p2: "We transform local textile waste into 'Omamori' (charms) that connect people across the globe.", prob_h2: "One Trillion Yen of Memories,<br>Discarded Annually.", prob_p1: "In Japan today, countless kimonos are losing their place and value.<br>From natural disasters to family inheritance, many are forced to let go of precious garments they wish to keep.", prob_p2: "We rescue these 'discarded emotions' and weave them into new stories loved worldwide.", sim_title: "Create Your Omamori", wish_env: "Climate Action" }
             };
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
