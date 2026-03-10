@@ -47,15 +47,18 @@
         /* ヒーロー */
         .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px;}
         .hero h1 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 8px; }
+        .hero p { font-size: clamp(1rem, 3vw, 1.5rem); font-weight: 500; color: var(--sub-text); }
 
-        /* イントロ */
+        /* イントロ（サイズ復元） */
         .intro-section { min-height: 150vh; display: flex; justify-content: center; align-items: center; padding: 0 20px; }
-        .intro-content { max-width: 800px; text-align: center; }
+        .intro-content { max-width: 900px; text-align: center; }
+        .intro-content h2 { font-size: clamp(3rem, 7vw, 5rem); margin-bottom: 50px; line-height: 1.1; }
+        .intro-content p { font-size: 1.4rem; line-height: 2; color: var(--sub-text); margin-bottom: 30px; }
         
         .reveal { opacity: 0; transform: translateY(100px); filter: blur(10px); transition: all 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); filter: blur(0); }
 
-        /* 横スクロールストーリー */
+        /* 横スクロールストーリー（アイコンエリア復元） */
         .story-section { height: 350vh; position: relative; }
         .sticky-wrapper { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; background-color: #000; color: #f5f5f7; }
         .horizontal-scroll { display: flex; width: 300vw; height: 100%; transition: transform 0.1s linear; }
@@ -63,10 +66,18 @@
         
         .story-card {
             display: flex; flex-direction: row; background: #1d1d1f; border-radius: 28px; overflow: hidden;
-            width: 90%; max-width: 1000px; height: 65vh; max-height: 550px;
+            width: 90%; max-width: 1100px; height: 60vh; max-height: 580px;
             box-shadow: 0 40px 80px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.08);
         }
-        .story-text { width: 100%; padding: 60px; display: flex; flex-direction: column; justify-content: center; }
+        .story-icon-area { 
+            width: 40%; display: flex; justify-content: center; align-items: center; 
+            background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%); 
+            border-right: 1px solid rgba(255,255,255,0.08); 
+        }
+        .story-icon-area svg { width: 120px; height: 120px; stroke: #fff; }
+        .story-text { width: 60%; padding: 80px; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; }
+        .story-text h2 { font-size: 3rem; margin-bottom: 24px; font-weight: 700; }
+        .story-text p { font-size: 1.4rem; color: #a1a1a6; line-height: 1.6; }
 
         /* シミュレーター */
         .simulator-section { min-height: 100vh; padding: 120px 20px; text-align: center; background: #fff;}
@@ -98,7 +109,7 @@
         .sdg-icon { font-size: 32px; margin-top: 20px; transition: 0.5s; }
         .knot { position: absolute; top: 18px; left: 50%; transform: translate(-50%, 0) translateZ(25px); width: 44px; height: 18px; border: 4px solid #d4af37; border-radius: 50px; }
         
-        .infusing-glow { box-shadow: 0 0 50px 20px rgba(212, 175, 55, 0.4) !important; filter: brightness(1.2); }
+        .infusing-glow { box-shadow: 0 0 60px 30px rgba(212, 175, 55, 0.5) !important; filter: brightness(1.2); }
 
         .glare {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -111,7 +122,7 @@
         .control-group { margin-bottom: 30px; display: flex; flex-direction: column; gap: 10px;}
         .control-group h3 { margin: 0 0 12px 0; font-size: 12px; color: var(--sub-text); font-weight: 700; border-bottom: 1px solid #e5e5ea; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         
-        button.action-btn { padding: 14px 18px; border: 1px solid #d2d2d7; background: #fff; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.3s; }
+        button.action-btn { padding: 14px 18px; border: 1px solid #d2d2d7; background: #fff; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.3s; text-align: left; }
         button.action-btn:hover { background: #f5f5f7; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         
         .custom-input { padding: 14px; border-radius: 12px; border: 1px solid #d2d2d7; font-size: 14px; outline: none; transition: 0.3s; background: #fff; }
@@ -122,7 +133,12 @@
 
         .credit-watermark { position: absolute; bottom: 15px; right: 10px; font-size: 10px; color: rgba(255, 255, 255, 0.4); font-weight: 500; letter-spacing: 1px; pointer-events: none; transform: translateZ(5px); }
 
-        @media (max-width: 768px) { .story-card { flex-direction: column; height: auto; } .story-text { width: 100%; padding: 40px 25px; } }
+        @media (max-width: 768px) { 
+            .story-card { flex-direction: column; height: auto; } 
+            .story-icon-area { width: 100%; height: 200px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); } 
+            .story-text { width: 100%; padding: 40px 25px; } 
+            .story-text h2 { font-size: 2rem; }
+        }
     </style>
 </head>
 <body>
@@ -147,9 +163,39 @@
     <div class="story-section" id="story-trigger">
         <div class="sticky-wrapper">
             <div class="horizontal-scroll" id="horizontal-target">
-                <div class="story-panel"><div class="story-card"><div class="story-text"><h2>1. 地域の廃材</h2><p>捨てられる運命にあった着物の端切れを救い出します。</p></div></div></div>
-                <div class="story-panel"><div class="story-card"><div class="story-text"><h2>2. アップサイクル</h2><p>伝統技術で、新しい価値を持つお守りへと作り変えます。</p></div></div></div>
-                <div class="story-panel"><div class="story-card"><div class="story-text"><h2>3. お守りの誕生</h2><p>SDGsの願いを込め、世界中へ届けるお土産が完成します。</p></div></div></div>
+                <div class="story-panel">
+                    <div class="story-card">
+                        <div class="story-icon-area">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                        </div>
+                        <div class="story-text">
+                            <h2>1. 地域の廃材</h2>
+                            <p>捨てられる運命にあった着物の端切れやデッドストックを救い出します。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="story-panel">
+                    <div class="story-card">
+                        <div class="story-icon-area">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
+                        </div>
+                        <div class="story-text">
+                            <h2>2. アップサイクル</h2>
+                            <p>職人の手仕事とデザインの力で、新しい価値を持つプロダクトへ。</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="story-panel">
+                    <div class="story-card">
+                        <div class="story-icon-area">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        </div>
+                        <div class="story-text">
+                            <h2>3. 世界の願い</h2>
+                            <p>SDGsの想いを乗せて、国境を越え、次世代へと想いを繋ぎます。</p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -200,14 +246,14 @@
         const glare = document.getElementById('glare');
         const scene = document.querySelector('.scene');
         
-        scene.addEventListener('mousemove', e => {
+        function update3D(e) {
             const rect = scene.getBoundingClientRect();
             const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
             const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
             card.style.transform = `rotateX(${y * -20}deg) rotateY(${x * 20}deg)`;
             glare.style.transform = `translateX(${x * 80}%) translateZ(1px)`;
-        });
-
+        }
+        scene.addEventListener('mousemove', update3D);
         scene.addEventListener('mouseleave', () => {
             card.style.transform = `rotateX(0deg) rotateY(0deg)`;
             glare.style.transform = `translateX(-100%) translateZ(1px)`;
@@ -301,8 +347,8 @@
 
         function changeLanguage(lang) {
             const translations = {
-                ja: { title: "Global Omamori Project", subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", intro_h2: "伝統を、<br>未来のカタチへ。", wish_env: "環境保護" },
-                en: { title: "Global Omamori Project", subtitle: "~ Upcycling waste into 'Global Wishes' ~", intro_h2: "Tradition,<br>Reshaped for the Future.", wish_env: "Climate Action" }
+                ja: { title: "Global Omamori Project", subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", intro_h2: "伝統を、<br>未来のカタチへ。", intro_p1: "日本には、古くなったものを慈しみ、新しい命を吹き込む「もったいない」の精神があります。", intro_p2: "私たちは、地域の衣類ゴミとして捨てられるはずだった布地を、世界中の人々を繋ぐ「お守り」へと生まれ変わらせます。", sim_title: "Create Your Omamori", wish_env: "環境保護" },
+                en: { title: "Global Omamori Project", subtitle: "~ Upcycling waste into 'Global Wishes' ~", intro_h2: "Tradition,<br>Reshaped for the Future.", intro_p1: "Japan has a spirit of 'Mottainai'—cherishing old things and breathing new life into them.", intro_p2: "We transform local textile waste into 'Omamori' (charms) that connect people across the globe.", sim_title: "Create Your Omamori", wish_env: "Climate Action" }
             };
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
