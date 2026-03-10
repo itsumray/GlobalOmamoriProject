@@ -14,6 +14,7 @@
     <style>
         :root {
             --accent-gradient: linear-gradient(135deg, #34c759 0%, #30b0c7 50%, #007aff 100%);
+            --white-gold: radial-gradient(circle, #fff9e6 0%, #f1d38d 40%, #d4af37 80%, rgba(255,255,255,0) 100%);
             --bg-color: #f5f5f7;
             --text-color: #1d1d1f;
             --sub-text: #86868b;
@@ -27,7 +28,6 @@
             -webkit-font-smoothing: antialiased;
         }
         
-        /* 言語切り替え */
         .lang-switcher {
             position: fixed; top: 20px; right: 20px; z-index: 1000;
             background: rgba(255, 255, 255, 0.8);
@@ -36,9 +36,7 @@
             backdrop-filter: saturate(180%) blur(20px);
         }
         .lang-switcher button { border: none; background: none; cursor: pointer; font-size: 13px; margin: 0 5px; font-weight: 500; color: var(--sub-text); transition: 0.3s; }
-        .lang-switcher button:hover { color: var(--text-color); }
 
-        /* グラデーションタイトル共通 */
         .gradient-title {
             font-weight: 800; letter-spacing: -0.03em;
             background: var(--accent-gradient);
@@ -49,18 +47,15 @@
         /* ヒーロー */
         .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px;}
         .hero h1 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 8px; }
-        .hero p { font-size: clamp(1rem, 3vw, 1.5rem); font-weight: 500; color: var(--sub-text); }
 
-        /* イントロ（ブランクからの浮上） */
+        /* イントロ */
         .intro-section { min-height: 150vh; display: flex; justify-content: center; align-items: center; padding: 0 20px; }
         .intro-content { max-width: 800px; text-align: center; }
-        .intro-content h2 { font-size: clamp(2.5rem, 6vw, 4rem); margin-bottom: 40px; line-height: 1.1; }
-        .intro-content p { font-size: 1.3rem; line-height: 1.8; color: var(--sub-text); margin-bottom: 24px; }
         
         .reveal { opacity: 0; transform: translateY(100px); filter: blur(10px); transition: all 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .reveal.active { opacity: 1; transform: translateY(0); filter: blur(0); }
 
-        /* 横スクロールストーリー */
+        /* 横スクロール */
         .story-section { height: 350vh; position: relative; }
         .sticky-wrapper { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; background-color: #000; color: #f5f5f7; }
         .horizontal-scroll { display: flex; width: 300vw; height: 100%; transition: transform 0.1s linear; }
@@ -71,17 +66,14 @@
             width: 90%; max-width: 1000px; height: 65vh; max-height: 550px;
             box-shadow: 0 40px 80px rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.08);
         }
-        .story-icon-area { width: 40%; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0) 100%); border-right: 1px solid rgba(255,255,255,0.08); }
-        .story-text { width: 60%; padding: 60px; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; }
-        .story-text h2 { font-size: clamp(2rem, 4vw, 3rem); font-weight: 700; margin-bottom: 20px; }
-        .story-text p { font-size: 1.2rem; line-height: 1.7; color: #a1a1a6; }
+        .story-text { width: 60%; padding: 60px; display: flex; flex-direction: column; justify-content: center; }
 
         /* シミュレーター */
         .simulator-section { min-height: 100vh; padding: 120px 20px; text-align: center; background: #fff;}
         .simulator-container { display: flex; justify-content: center; align-items: center; gap: 80px; flex-wrap: wrap; margin-top: 60px; position: relative; }
 
         .scene { perspective: 1200px; width: 320px; height: 480px; display: flex; justify-content: center; align-items: center; }
-        .omamori-wrapper { width: 230px; height: 360px; position: relative; transform-style: preserve-3d; transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .omamori-wrapper { width: 230px; height: 360px; position: relative; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
         
         .omamori-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -94,19 +86,24 @@
             background-color: rgba(255, 255, 255, 0.95); width: 55%; padding: 30px 0; border-radius: 4px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.8s ease;
         }
 
-        /* 文字のエフェクト */
         .omamori-text { 
             font-family: 'Noto Serif JP', serif; font-size: 26px; font-weight: 700; color: #1d1d1f; 
             writing-mode: vertical-rl; text-orientation: upright; letter-spacing: 4px;
-            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: all 0.8s ease;
         }
 
         .sdg-icon { font-size: 32px; margin-top: 20px; transition: 0.5s; }
         .knot { position: absolute; top: 18px; left: 50%; transform: translate(-50%, 0) translateZ(25px); width: 44px; height: 18px; border: 4px solid #d4af37; border-radius: 50px; }
         
-        /* クレジット透かし */
+        /* 込める時の発光エフェクト */
+        .infusing-glow {
+            box-shadow: 0 0 50px 20px rgba(212, 175, 55, 0.4) !important;
+            filter: brightness(1.2);
+        }
+
         .credit-watermark {
             position: absolute; bottom: 15px; right: 10px; font-size: 10px;
             color: rgba(255, 255, 255, 0.4); font-weight: 500; letter-spacing: 1px;
@@ -121,33 +118,30 @@
         }
 
         .controls { text-align: left; width: 100%; max-width: 340px; }
-        .control-group h3 { margin: 0 0 12px 0; font-size: 12px; color: var(--sub-text); font-weight: 700; border-bottom: 1px solid #e5e5ea; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         .control-group { margin-bottom: 30px; display: flex; flex-direction: column; gap: 10px;}
+        .control-group h3 { margin: 0 0 12px 0; font-size: 12px; color: var(--sub-text); font-weight: 700; border-bottom: 1px solid #e5e5ea; padding-bottom: 8px; text-transform: uppercase; letter-spacing: 1px; }
         
-        button.action-btn { padding: 14px 18px; border: 1px solid #d2d2d7; background: #fff; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.3s; text-align: left; position: relative; }
+        button.action-btn { padding: 14px 18px; border: 1px solid #d2d2d7; background: #fff; border-radius: 12px; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.3s; }
         button.action-btn:hover { background: #f5f5f7; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
         
         .custom-input { padding: 14px; border-radius: 12px; border: 1px solid #d2d2d7; font-size: 14px; outline: none; transition: 0.3s; background: #fff; }
-        .custom-input:focus { border-color: #30b0c7; box-shadow: 0 0 0 4px rgba(48,176,199,0.1); }
         
-        /* 込めるボタン */
-        .wish-btn { background: #1d1d1f !important; color: #fff !important; text-align: center !important; border: none !important; font-weight: 600 !important; overflow: hidden; }
-        .wish-btn:active { transform: scale(0.98); }
+        .wish-btn { background: #1d1d1f !important; color: #fff !important; text-align: center !important; border: none !important; font-weight: 600 !important; }
 
         .save-btn-gradient {
             background: var(--accent-gradient) !important;
             color: #fff !important; border: none !important; text-align: center !important; font-weight: 700 !important; font-size: 16px !important;
-            transition: 0.3s;
         }
-        .save-btn-gradient:hover { box-shadow: 0 6px 20px rgba(0,122,255,0.3) !important; transform: translateY(-3px); }
 
-        /* キラキラ粒子 */
+        /* 究極のホワイトゴールド粒子 */
         .genie-particle {
             position: fixed; pointer-events: none; border-radius: 50%;
+            background: var(--white-gold);
             z-index: 2000;
+            filter: blur(2px);
         }
 
-        @media (max-width: 768px) { .story-card { flex-direction: column; height: auto; } .story-icon-area { width: 100%; height: 180px; } .story-text { width: 100%; padding: 40px 25px; } }
+        @media (max-width: 768px) { .story-card { flex-direction: column; height: auto; } .story-text { width: 100%; padding: 40px 25px; } }
     </style>
 </head>
 <body>
@@ -172,39 +166,9 @@
     <div class="story-section" id="story-trigger">
         <div class="sticky-wrapper">
             <div class="horizontal-scroll" id="horizontal-target">
-                <div class="story-panel">
-                    <div class="story-card">
-                        <div class="story-icon-area">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:90px; height:90px;"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><line x1="20" y1="4" x2="8.12" y2="15.88"></line><line x1="14.47" y1="14.48" x2="20" y2="20"></line><line x1="8.12" y1="8.12" x2="12" y2="12"></line></svg>
-                        </div>
-                        <div class="story-text">
-                            <h2>1. 地域の廃材</h2>
-                            <p>捨てられる運命にあった着物の端切れを救い出します。</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="story-panel">
-                    <div class="story-card">
-                        <div class="story-icon-area">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:90px; height:90px;"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"></path></svg>
-                        </div>
-                        <div class="story-text">
-                            <h2>2. アップサイクル</h2>
-                            <p>伝統技術で、新しい価値を持つお守りへと作り変えます。</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="story-panel">
-                    <div class="story-card">
-                        <div class="story-icon-area">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:90px; height:90px;"><path d="M12 2L5 6v12l7 4 7-4V6z"></path><circle cx="12" cy="12" r="2"></circle><path d="M12 7v2M12 15v2M7 12h2M15 12h2"></path></svg>
-                        </div>
-                        <div class="story-text">
-                            <h2>3. お守りの誕生</h2>
-                            <p>SDGsの願いを込め、世界中へ届けるお土産が完成します。</p>
-                        </div>
-                    </div>
-                </div>
+                <div class="story-panel"><div class="story-card"><div class="story-text"><h2>1. 地域の廃材</h2><p>捨てられる運命にあった着物の端切れを救い出します。</p></div></div></div>
+                <div class="story-panel"><div class="story-card"><div class="story-text"><h2>2. アップサイクル</h2><p>伝統技術で、新しい価値を持つお守りへと作り変えます。</p></div></div></div>
+                <div class="story-panel"><div class="story-card"><div class="story-text"><h2>3. お守りの誕生</h2><p>SDGsの願いを込め、世界中へ届けるお土産が完成します。</p></div></div></div>
             </div>
         </div>
     </div>
@@ -228,9 +192,9 @@
             <div class="controls">
                 <div class="control-group">
                     <h3 data-i18n="ctrl_pattern">Fabric Pattern</h3>
-                    <button class="action-btn" onclick="changePattern('blue.jpg', '#1b263b')">🌊 藍染 (Indigo Blue)</button>
-                    <button class="action-btn" onclick="changePattern('green.jpg', '#1b4a22')">🌿 草木染 (Natural Green)</button>
-                    <button class="action-btn" onclick="changePattern('red.jpg', '#a31010')">🌸 紅花柄 (Crimson Floral)</button>
+                    <button class="action-btn" onclick="changePattern('blue.jpg')">🌊 藍染</button>
+                    <button class="action-btn" onclick="changePattern('green.jpg')">🌿 草木染</button>
+                    <button class="action-btn" onclick="changePattern('red.jpg')">🌸 紅花柄</button>
                 </div>
                 <div class="control-group">
                     <h3 data-i18n="ctrl_custom">Custom Wish</h3>
@@ -248,105 +212,94 @@
     <script>
         // スクロール監視
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) entry.target.classList.add('active');
-            });
+            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
         }, { threshold: 0.3 });
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
-        // 3D & Glare
+        // 3D効果
         const card = document.getElementById('omamori-card');
         const glare = document.getElementById('glare');
         const scene = document.querySelector('.scene');
-        function handleMove(e) {
+        scene.addEventListener('mousemove', e => {
             const rect = scene.getBoundingClientRect();
-            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
-            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
-            const x = (clientX - rect.left - rect.width / 2) / (rect.width / 2);
-            const y = (clientY - rect.top - rect.height / 2) / (rect.height / 2);
+            const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+            const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
             card.style.transform = `rotateX(${y * -20}deg) rotateY(${x * 20}deg)`;
             glare.style.transform = `translateX(${x * 80}%) translateZ(1px)`;
-        }
-        function handleLeave() {
+        });
+        scene.addEventListener('mouseleave', () => {
             card.style.transform = `rotateX(0deg) rotateY(0deg)`;
             glare.style.transform = `translateX(-100%) translateZ(1px)`;
-        }
-        scene.addEventListener('mousemove', handleMove);
-        scene.addEventListener('mouseleave', handleLeave);
-        scene.addEventListener('touchmove', handleMove);
-        scene.addEventListener('touchend', handleLeave);
+        });
 
         // 横スクロール
-        const storySection = document.getElementById('story-trigger');
-        const horizontalTarget = document.getElementById('horizontal-target');
         window.addEventListener('scroll', () => {
-            const rect = storySection.getBoundingClientRect();
+            const story = document.getElementById('story-trigger');
+            const target = document.getElementById('horizontal-target');
+            const rect = story.getBoundingClientRect();
             if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
-                const progress = Math.abs(rect.top) / (storySection.offsetHeight - window.innerHeight);
-                horizontalTarget.style.transform = `translateX(-${progress * 200}vw)`;
+                const progress = Math.abs(rect.top) / (story.offsetHeight - window.innerHeight);
+                target.style.transform = `translateX(-${progress * 200}vw)`;
             }
         });
 
-        function changePattern(imageUrl, fallbackColor) {
-            document.getElementById('omamori-bg').style.backgroundImage = `url('${imageUrl}')`;
-        }
+        function changePattern(img) { document.getElementById('omamori-bg').style.backgroundImage = `url('${img}')`; }
 
-        // ★願いを込めるアニメーション
+        // ★最強の「願いを込める」演出
         function infuseWish() {
             const input = document.getElementById('custom-wish-input');
-            const wishBtn = document.getElementById('infuse-btn');
-            const omamoriWish = document.getElementById('omamori-wish');
-            const omamoriIcon = document.getElementById('omamori-icon');
-            const cardWrapper = document.getElementById('omamori-card');
+            const btn = document.getElementById('infuse-btn');
+            const omamori = document.getElementById('omamori-card');
+            const wishText = document.getElementById('omamori-wish');
+            const wishIcon = document.getElementById('omamori-icon');
 
             if (input.value.trim() === "") return;
 
-            const btnRect = wishBtn.getBoundingClientRect();
-            const cardRect = cardWrapper.getBoundingClientRect();
-            const targetX = cardRect.left + cardRect.width / 2;
-            const targetY = cardRect.top + cardRect.height / 2;
+            const bRect = btn.getBoundingClientRect();
+            const cRect = omamori.getBoundingClientRect();
+            const tx = cRect.left + cRect.width / 2;
+            const ty = cRect.top + cRect.height / 2;
 
-            // 1. キラキラ生成
-            for (let i = 0; i < 25; i++) {
-                createParticle(btnRect, targetX, targetY);
+            // 1. 粒子を大量・巨大・ゆったり生成
+            for (let i = 0; i < 40; i++) {
+                createLargeParticle(bRect, tx, ty);
             }
 
-            // 2. お守りの拍動
-            cardWrapper.style.transition = 'transform 0.8s ease-in-out';
-            cardWrapper.style.transform = 'scale(1.05)';
-
-            // 3. 込められた瞬間の演出
+            // 2. お守りを少し浮かせて「タメ」を作る
+            omamori.style.transition = 'all 1.2s cubic-bezier(0.5, 0, 0.2, 1)';
+            omamori.style.transform = 'scale(1.08) translateY(-20px)';
+            
+            // 3. 1.2秒後（粒子が到達し終わる頃）に変化
             setTimeout(() => {
-                cardWrapper.style.transform = 'scale(1.1) rotateX(0deg)'; // グッと大きくなる
-
-                // 光に包まれる演出
-                omamoriWish.style.filter = 'blur(10px) brightness(2)';
-                omamoriWish.style.opacity = '0';
+                omamori.classList.add('infusing-glow');
+                wishText.style.filter = 'blur(15px) brightness(3)';
+                wishText.style.opacity = '0';
+                wishIcon.style.opacity = '0';
 
                 setTimeout(() => {
-                    omamoriWish.innerText = input.value;
-                    omamoriWish.removeAttribute('data-i18n');
-                    omamoriIcon.innerText = "✨";
-
-                    omamoriWish.style.filter = 'blur(0) brightness(1)';
-                    omamoriWish.style.opacity = '1';
+                    wishText.innerText = input.value;
+                    wishText.removeAttribute('data-i18n');
+                    wishIcon.innerText = "✨";
+                    wishText.style.filter = 'blur(0) brightness(1)';
+                    wishText.style.opacity = '1';
+                    wishIcon.style.opacity = '1';
                     
-                    setTimeout(() => { cardWrapper.style.transform = 'scale(1)'; }, 300);
-                }, 200);
-
-            }, 800);
+                    setTimeout(() => { 
+                        omamori.style.transform = 'scale(1) translateY(0)';
+                        omamori.classList.remove('infusing-glow');
+                    }, 500);
+                }, 300);
+            }, 1200);
         }
 
-        function createParticle(btnRect, targetX, targetY) {
+        function createLargeParticle(bRect, tx, ty) {
             const p = document.createElement('div');
             p.classList.add('genie-particle');
-            const colors = ['#fff', '#30b0c7', '#ffeaa7'];
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            p.style.background = `radial-gradient(circle, ${color} 0%, rgba(255,255,255,0) 70%)`;
-
-            const startX = btnRect.left + btnRect.width / 2;
-            const startY = btnRect.top + btnRect.height / 2;
-            const size = Math.random() * 8 + 4;
+            
+            // 粒子をデカくする
+            const size = Math.random() * 25 + 10;
+            const startX = bRect.left + bRect.width / 2;
+            const startY = bRect.top + bRect.height / 2;
             
             p.style.width = `${size}px`;
             p.style.height = `${size}px`;
@@ -355,20 +308,21 @@
             
             document.body.appendChild(p);
 
-            const midX = startX + (Math.random() * 300 - 150);
-            const midY = startY - (Math.random() * 200 + 100);
+            // 魔法の軌道：一回大きく散ってから吸い込まれる
+            const mx = startX + (Math.random() * 400 - 200);
+            const my = startY - (Math.random() * 300 + 100);
 
             p.animate([
                 { left: `${startX}px`, top: `${startY}px`, opacity: 0, scale: 0 },
-                { left: `${midX}px`, top: `${midY}px`, opacity: 1, scale: 1.5, offset: 0.3 },
-                { left: `${targetX}px`, top: `${targetY}px`, opacity: 0, scale: 0 }
+                { left: `${mx}px`, top: `${my}px`, opacity: 0.9, scale: 1.8, offset: 0.4 },
+                { left: `${tx}px`, top: `${ty}px`, opacity: 0, scale: 0.1 }
             ], {
-                duration: 1000 + Math.random() * 500,
-                easing: 'ease-out',
+                duration: 1200 + Math.random() * 800, // 長めにする
+                easing: 'cubic-bezier(0.4, 0, 0.2, 1)',
                 fill: 'forwards'
             });
 
-            setTimeout(() => { p.remove(); }, 1500);
+            setTimeout(() => p.remove(), 2000);
         }
 
         function saveOmamori() {
@@ -384,12 +338,12 @@
             });
         }
 
-        const translations = {
-            ja: { title: "Global Omamori Project", subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", intro_h2: "伝統を、<br>未来のカタチへ。", intro_p1: "日本には、古くなったものを慈しみ、新しい命を吹き込む「もったいない」の精神があります。", intro_p2: "私たちは、地域の衣類ゴミとして捨てられるはずだった布地を、世界中の人々を繋ぐ「お守り」へと生まれ変わらせます。", sim_title: "Create Your Omamori", wish_env: "環境保護" },
-            en: { title: "Global Omamori Project", subtitle: "~ Upcycling waste into 'Global Wishes' ~", intro_h2: "Tradition,<br>Reshaped for the Future.", intro_p1: "Japan has a spirit of 'Mottainai'—cherishing old things and breathing new life into them.", intro_p2: "We transform local textile waste into 'Omamori' (charms) that connect people across the globe.", sim_title: "Create Your Omamori", wish_env: "Climate Action" },
-            zh: { title: "Global Omamori Project", subtitle: "〜将废料转化为“世界心願”の升级再造〜", intro_h2: "传承经典，<br>塑就未来。", intro_p1: "日本拥有一种名为“惜物(Mottainai)”的精神，即爱惜旧物并赋予其新的生命。", intro_p2: "我们将原本会被遗棄的废旧布料，转化为连接世界各地人们的“御守”。", sim_title: "Create Your Omamori", wish_env: "环境保护" }
-        };
+        // 言語設定（共通）
         function changeLanguage(lang) {
+            const translations = {
+                ja: { title: "Global Omamori Project", subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", intro_h2: "伝統を、<br>未来のカタチへ。", wish_env: "環境保護", sim_title: "Create Your Omamori" },
+                en: { title: "Global Omamori Project", subtitle: "~ Upcycling waste into 'Global Wishes' ~", intro_h2: "Tradition,<br>Reshaped for the Future.", wish_env: "Climate Action", sim_title: "Create Your Omamori" }
+            };
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
                 if (translations[lang][key]) el.innerHTML = translations[lang][key];
