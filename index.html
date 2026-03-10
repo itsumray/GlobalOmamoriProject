@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Global Omamori Project</title>
+    
+    <!-- ★追加：全端末で同じ綺麗な文字を表示するためのWebフォント（Google Fonts） -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&family=Noto+Serif+JP:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ★修正：WindowsやAndroidでもApple風の綺麗なゴシック体になるようにNoto Sans JPを指定 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "Segoe UI", "Noto Sans JP", "Hiragino Kaku Gothic ProN", Arial, sans-serif;
+            background-color: #f5f5f7;
+            color: #1d1d1f;
+            margin: 0; padding: 0; overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        .lang-switcher {
+            position: fixed; top: 20px; right: 20px; z-index: 1000;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 8px 16px; border-radius: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            backdrop-filter: saturate(180%) blur(20px);
+        }
+        .lang-switcher button { border: none; background: none; cursor: pointer; font-size: 13px; margin: 0 5px; font-weight: 500; color: #86868b; transition: 0.3s; font-family: inherit; }
+        .lang-switcher button:hover { color: #1d1d1f; }
+
+        .hero { height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 20px;}
+        .hero h1 { 
+            font-size: clamp(3rem, 8vw, 6rem); /* 画面サイズに合わせて文字が自動で小さくなる */
+            font-weight: 800; margin-bottom: 8px; letter-spacing: -0.03em; 
+            background: linear-gradient(135deg, #34c759 0%, #30b0c7 50%, #007aff 100%);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+        }
+        .hero p { font-size: clamp(1rem, 3vw, 1.5rem); font-weight: 500; color: #86868b; letter-spacing: 0; }
+
+        .story-section { height: 300vh; position: relative; }
+        .sticky-wrapper { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; background-color: #000; color: #f5f5f7; }
+        .horizontal-scroll { display: flex; width: 300vw; height: 100%; transition: transform 0.1s ease-out; }
+        .story-panel { width: 100vw; height: 100%; display: flex; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        
+        .story-card {
+            display: flex; flex-direction: row;
+            background: #1d1d1f; border-radius: 24px; overflow: hidden;
+            width: 90%; max-width: 1000px; height: 60vh; max-height: 500px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        
+        .story-icon-area {
+            width: 40%; display: flex; justify-content: center; align-items: center;
+            background: linear-gradient(135deg, rgba(255,255,255,0.02) 0%, rgba(255,255,255,0) 100%);
+            border-right: 1px solid rgba(255,255,255,0.05);
+        }
+        .story-icon-area svg { width: 100px; height: 100px; stroke: #ffffff; stroke-width: 1.5; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+
+        .story-text { width: 60%; padding: 40px; display: flex; flex-direction: column; justify-content: center; box-sizing: border-box; }
+        
+        /* ★修正：どんな端末でも文字が千切れたり、はみ出したりしない設定 */
+        .story-text h2 { 
+            font-size: clamp(1.8rem, 4vw, 2.8rem); 
+            font-weight: 700; margin-bottom: 15px; color: #f5f5f7; 
+            word-break: keep-all; overflow-wrap: break-word; line-height: 1.3; letter-spacing: -0.01em; 
+        }
+        .story-text p { font-size: clamp(1rem, 2vw, 1.2rem); line-height: 1.6; color: #a1a1a6; font-weight: 500; }
+
+        .simulator-section { min-height: 100vh; padding: 100px 20px; text-align: center; overflow: hidden; background: #fff;}
+        .simulator-container { display: flex; justify-content: center; align-items: center; gap: 80px; flex-wrap: wrap; margin-top: 50px; }
+
+        .scene { perspective: 1000px; width: 300px; height: 450px; display: flex; justify-content: center; align-items: center; }
+        .omamori-wrapper { width: 220px; height: 340px; position: relative; transform-style: preserve-3d; transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1); }
+
+        .omamori-bg {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #1b263b; /* 初期色（画像が読み込めない時用） */
+            /* ★修正：保存した「青い布」を初期状態に設定 */
+            background-image: url('blue.jpg');
+            background-size: cover; background-position: center;
+            clip-path: polygon(20% 0%, 80% 0%, 100% 15%, 100% 100%, 0% 100%, 0% 15%);
+            filter: drop-shadow(0 15px 20px rgba(0,0,0,0.15));
+            transform: translateZ(0px); transition: background-image 0.5s ease, background-color 0.5s ease;
+        }
+
+        .omamori-tag {
+            position: absolute; top: 50%; left: 50%;
+            transform: translate(-50%, -50%) translateZ(12px);
+            background-color: rgba(255, 255, 255, 0.98);
+            width: 55%; padding: 25px 0; border-radius: 4px;
+            box-shadow: -2px 4px 10px rgba(0,0,0,0.15);
+            display: flex; flex-direction: column; justify-content: center; align-items: center; pointer-events: none;
+        }
+        /* ★修正：お守りの文字も全端末共通の綺麗な明朝体（Noto Serif JP）に固定 */
+        .omamori-text { font-family: 'Noto Serif JP', serif; font-size: 24px; font-weight: 700; color: #1d1d1f; writing-mode: vertical-rl; text-orientation: upright; margin: 0 auto; letter-spacing: 2px;}
+        .sdg-icon { font-size: 28px; margin-top: 15px; }
+
+        .knot {
+            position: absolute; top: 15px; left: 50%;
+            transform: translate(-50%, 0) translateZ(20px);
+            width: 40px; height: 15px; border: 4px solid #d4af37; border-radius: 50px;
+            box-shadow: -1px 3px 6px rgba(0,0,0,0.2); pointer-events: none;
+        }
+
+        .glare {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(105deg, rgba(255,255,255,0) 20%, rgba(255,255,255,0.2) 50%, rgba(255,255,255,0) 80%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 15%, 100% 100%, 0% 100%, 0% 15%);
+            transform: translateX(-100%) translateZ(1px); pointer-events: none; mix-blend-mode: overlay;
+        }
+
+        .controls { text-align: left; width: 100%; max-width: 320px; }
+        .control-group h3 { margin: 0 0 12px 0; font-size: 12px; color: #86868b; font-weight: 700; letter-spacing: 0.05em; border-bottom: 1px solid #e5e5ea; padding-bottom: 8px; }
+        .control-group { margin-bottom: 32px; display: flex; flex-direction: column; gap: 8px;}
+        button.action-btn { padding: 14px 20px; border: 1px solid #d2d2d7; background: #fff; border-radius: 12px; cursor: pointer; transition: 0.2s; font-family: inherit; font-size: 15px; font-weight: 500; color: #1d1d1f; text-align: left; }
+        button.action-btn:hover { border-color: #86868b; background: #f5f5f7; }
+        button.action-btn:active { transform: scale(0.98); }
+
+        /* ★追加：スマホなどの小さな画面向けのレイアウト調整（レスポンシブ） */
+        @media (max-width: 768px) {
+            .story-card { flex-direction: column; height: auto; max-height: none; }
+            .story-icon-area { width: 100%; height: 150px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.05); }
+            .story-text { width: 100%; padding: 30px 20px; text-align: center; }
+            .simulator-container { gap: 40px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="lang-switcher">
+        <button onclick="changeLanguage('ja')">JP</button> | 
+        <button onclick="changeLanguage('en')">EN</button> | 
+        <button onclick="changeLanguage('zh')">ZH</button>
+    </div>
+
+    <!-- トップ -->
+    <div class="hero">
+        <h1 data-i18n="title">Global Omamori Project</h1>
+        <p data-i18n="subtitle">〜廃材を「世界の願い」に変えるアップサイクル〜</p>
+    </div>
+
+    <!-- 横スクロール -->
+    <div class="story-section" id="story-trigger">
+        <div class="sticky-wrapper">
+            <div class="horizontal-scroll" id="horizontal-target">
+                
+                <div class="story-panel">
+                    <div class="story-card">
+                        <div class="story-icon-area">
+                            <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"></circle><circle cx="6" cy="18" r="3"></circle><line x1="20" y1="4" x2="8.12" y2="15.88"></line><line x1="14.47" y1="14.48" x2="20" y2="20"></line><line x1="8.12" y1="8.12" x2="12" y2="12"></line></svg>
+                        </div>
+                        <div class="story-text">
+                            <h2 data-i18n="story1_title">1. 地域の廃材</h2>
+                            <p data-i18n="story1_desc">使われなくなった着物や浴衣の端切れ。これらは捨てられる運命にありました。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="story-panel">
+                    <div class="story-card">
+                        <div class="story-icon-area">
+                            <svg viewBox="0 0 24 24"><path d="M23 4v6h-6"></path><path d="M1 20v-6h6"></path><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10"></path><path d="M20.49 15a9 9 0 0 1-14.85 3.36L1 14"></path></svg>
+                        </div>
+                        <div class="story-text">
+                            <h2 data-i18n="story2_title">2. アップサイクル</h2>
+                            <p data-i18n="story2_desc">日本の伝統的な縫製技術と、再生紙を使った脱プラパッケージを組み合わせます。</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="story-panel">
+                    <div class="story-card">
+                        <div class="story-icon-area">
+                            <svg viewBox="0 0 24 24"><path d="M12 2L5 6v12l7 4 7-4V6z"></path><circle cx="12" cy="12" r="2"></circle><path d="M12 7v2"></path><path d="M12 15v2"></path><path d="M7 12h2"></path><path d="M15 12h2"></path></svg>
+                        </div>
+                        <div class="story-text">
+                            <h2 data-i18n="story3_title">3. お守りの誕生</h2>
+                            <p data-i18n="story3_desc">インバウンド向けの特別なお土産として、SDGsの願いを込めたお守りが完成します。</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- シミュレーター -->
+    <div class="simulator-section">
+        <h2 data-i18n="sim_title" style="font-size: clamp(2.5rem, 5vw, 3.5rem); font-weight: 700; color: #1d1d1f; letter-spacing: -0.02em;">Create Your Omamori</h2>
+        <p data-i18n="sim_desc" style="color: #86868b; font-size: clamp(1rem, 2vw, 1.2rem); margin-bottom: 40px;">あなただけの願いをデザインしましょう。（マウスでお守りに触れてみてください）</p>
+
+        <div class="simulator-container">
+            <div class="scene">
+                <div class="omamori-wrapper" id="omamori-card">
+                    <div class="omamori-bg" id="omamori-bg"></div>
+                    <div class="glare" id="glare"></div>
+                    <div class="omamori-tag" id="omamori-tag">
+                        <div id="omamori-wish" class="omamori-text" data-i18n="wish_env">環境保護</div>
+                        <div id="omamori-icon" class="sdg-icon">🌍</div>
+                    </div>
+                    <div class="knot" id="knot"></div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <div class="control-group">
+                    <h3 data-i18n="ctrl_pattern">Fabric</h3>
+                    <!-- ★修正：提供いただいた3枚の布画像ファイルを指定 -->
+                    <button class="action-btn" onclick="changePattern('blue.jpg', '#1b263b')">🌊 藍染 (Indigo Blue)</button>
+                    <button class="action-btn" onclick="changePattern('green.jpg', '#1b4a22')">🌿 草木染 (Natural Green)</button>
+                    <button class="action-btn" onclick="changePattern('red.jpg', '#a31010')">🌸 紅花柄 (Crimson Floral)</button>
+                </div>
+
+                <div class="control-group">
+                    <h3 data-i18n="ctrl_wish">Wish</h3>
+                    <button class="action-btn" onclick="changeWish('wish_env', '🌍')">🌍 <span data-i18n="btn_env">環境保護</span></button>
+                    <button class="action-btn" onclick="changeWish('wish_peace', '🕊️')">🕊️ <span data-i18n="btn_peace">世界平和</span></button>
+                    <button class="action-btn" onclick="changeWish('wish_ocean', '🐋')">🐋 <span data-i18n="btn_ocean">海の豊かさ</span></button>
+                    <button class="action-btn" onclick="changeWish('wish_equal', '🤝')">🤝 <span data-i18n="btn_equal">平等な社会</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const card = document.getElementById('omamori-card');
+        const glare = document.getElementById('glare');
+        const scene = document.querySelector('.scene');
+
+        // ★スマホ向け（タッチ操作）の3Dエフェクト対応
+        function handleMove(e) {
+            let clientX, clientY;
+            if (e.touches) {
+                clientX = e.touches[0].clientX;
+                clientY = e.touches[0].clientY;
+            } else {
+                clientX = e.clientX;
+                clientY = e.clientY;
+            }
+
+            const rect = scene.getBoundingClientRect();
+            const x = (clientX - rect.left - rect.width / 2) / (rect.width / 2);
+            const y = (clientY - rect.top - rect.height / 2) / (rect.height / 2);
+
+            const rotateX = y * -15;
+            const rotateY = x * 15;
+
+            card.style.transition = 'none';
+            glare.style.transition = 'none';
+            card.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+            glare.style.transform = `translateX(${x * 80}%) translateZ(1px)`;
+        }
+
+        function handleLeave() {
+            card.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            glare.style.transition = 'transform 0.6s cubic-bezier(0.2, 0.8, 0.2, 1)';
+            card.style.transform = `rotateX(0deg) rotateY(0deg)`;
+            glare.style.transform = `translateX(-100%) translateZ(1px)`;
+        }
+
+        scene.addEventListener('mousemove', handleMove);
+        scene.addEventListener('mouseleave', handleLeave);
+        scene.addEventListener('touchmove', handleMove);
+        scene.addEventListener('touchend', handleLeave);
+
+        const storySection = document.getElementById('story-trigger');
+        const horizontalTarget = document.getElementById('horizontal-target');
+        window.addEventListener('scroll', () => {
+            const rect = storySection.getBoundingClientRect();
+            if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
+                const scrollableDistance = storySection.offsetHeight - window.innerHeight;
+                const scrolled = Math.abs(rect.top);
+                const progress = scrolled / scrollableDistance;
+                const translateX = progress * 200;
+                horizontalTarget.style.transform = `translateX(-${translateX}vw)`;
+            }
+        });
+
+        function changePattern(imageUrl, fallbackColor) {
+            const bg = document.getElementById('omamori-bg');
+            bg.style.backgroundColor = fallbackColor;
+            bg.style.backgroundImage = `url('${imageUrl}')`;
+        }
+
+        function changeWish(translationKey, icon) {
+            const wishElement = document.getElementById('omamori-wish');
+            wishElement.setAttribute('data-i18n', translationKey);
+            wishElement.innerText = translations[currentLang][translationKey];
+            document.getElementById('omamori-icon').innerText = icon;
+        }
+
+        let currentLang = 'ja';
+        const translations = {
+            ja: {
+                title: "Global Omamori Project", subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜",
+                story1_title: "1. 地域の廃材", story1_desc: "使われなくなった着物や浴衣の端切れ。これらは捨てられる運命にありました。",
+                story2_title: "2. アップサイクル", story2_desc: "日本の伝統的な縫製技術と、再生紙を使った脱プラパッケージを組み合わせます。",
+                story3_title: "3. お守りの誕生", story3_desc: "インバウンド向けの特別なお土産として、SDGsの願いを込めたお守りが完成します。",
+                sim_title: "Create Your Omamori", sim_desc: "あなただけの願いをデザインしましょう。（マウスでお守りに触れてみてください）",
+                ctrl_pattern: "Fabric", ctrl_wish: "Wish",
+                wish_env: "環境保護", wish_peace: "世界平和", wish_ocean: "海の豊かさ", wish_equal: "平等な社会",
+                btn_env: "環境保護", btn_peace: "世界平和", btn_ocean: "海の豊かさ", btn_equal: "平等な社会"
+            },
+            en: {
+                title: "Global Omamori Project", subtitle: "~ Upcycling waste into 'Global Wishes' ~",
+                story1_title: "1. Local Waste", story1_desc: "Scraps of unused Kimonos. They were destined to be thrown away.",
+                story2_title: "2. Upcycling", story2_desc: "Combining Japanese sewing techniques with plastic-free packaging.",
+                story3_title: "3. Reborn as Omamori", story3_desc: "A special souvenir for tourists, carrying wishes for the SDGs.",
+                sim_title: "Create Your Omamori", sim_desc: "Design an Omamori with your own wish.",
+                ctrl_pattern: "Fabric", ctrl_wish: "Wish",
+                wish_env: "Climate Action", wish_peace: "Peace", wish_ocean: "Life Below Water", wish_equal: "Equality",
+                btn_env: "Climate Action", btn_peace: "Peace", btn_ocean: "Life Below Water", btn_equal: "Equality"
+            },
+            zh: {
+                title: "Global Omamori Project", subtitle: "〜将废料转化为“世界心愿”的升级再造〜",
+                story1_title: "1. 当地废料", story1_desc: "不再使用的和服的边角料。它们原本注定被丢弃。",
+                story2_title: "2. 升级再造", story2_desc: "结合日本传统缝纫工艺，以及使用再生纸的无塑料包装。",
+                story3_title: "3. 御守的诞生", story3_desc: "作为专为海外游客打造的特别伴手礼，承载SDGs心愿的御守就此完成。",
+                sim_title: "Create Your Omamori", sim_desc: "设计属于你的心愿御守。",
+                ctrl_pattern: "Fabric", ctrl_wish: "Wish",
+                wish_env: "环境保护", wish_peace: "世界和平", wish_ocean: "海洋生态", wish_equal: "社会平等",
+                btn_env: "环境保护", btn_peace: "世界和平", btn_ocean: "海洋生态", btn_equal: "社会平等"
+            }
+        };
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const elements = document.querySelectorAll('[data-i18n]');
+            elements.forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (translations[lang][key]) {
+                    el.innerText = translations[lang][key];
+                }
+            });
+        }
+    </script>
+</body>
+</html>
