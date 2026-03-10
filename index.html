@@ -27,6 +27,20 @@
             margin: 0; padding: 0; overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
         }
+
+        /* サイト全体の右下固定透かし */
+        .site-watermark {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 9999;
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.15);
+            font-weight: 700;
+            letter-spacing: 2px;
+            pointer-events: none;
+            text-transform: uppercase;
+        }
         
         .lang-switcher {
             position: fixed; top: 20px; right: 20px; z-index: 1000;
@@ -49,16 +63,21 @@
         .hero h1 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 8px; }
         .hero p { font-size: clamp(1rem, 3vw, 1.5rem); font-weight: 500; color: var(--sub-text); }
 
-        /* イントロ（サイズ復元） */
+        /* イントロ（ふわっと出るアニメーション） */
         .intro-section { min-height: 150vh; display: flex; justify-content: center; align-items: center; padding: 0 20px; }
         .intro-content { max-width: 900px; text-align: center; }
         .intro-content h2 { font-size: clamp(3rem, 7vw, 5rem); margin-bottom: 50px; line-height: 1.1; }
         .intro-content p { font-size: 1.4rem; line-height: 2; color: var(--sub-text); margin-bottom: 30px; }
         
-        .reveal { opacity: 0; transform: translateY(100px); filter: blur(10px); transition: all 1.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .reveal { 
+            opacity: 0; 
+            transform: translateY(60px); 
+            filter: blur(15px); 
+            transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1); /* より滑らかに */
+        }
         .reveal.active { opacity: 1; transform: translateY(0); filter: blur(0); }
 
-        /* 横スクロールストーリー（アイコンエリア復元） */
+        /* 横スクロールストーリー */
         .story-section { height: 350vh; position: relative; }
         .sticky-wrapper { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; background-color: #000; color: #f5f5f7; }
         .horizontal-scroll { display: flex; width: 300vw; height: 100%; transition: transform 0.1s linear; }
@@ -131,8 +150,6 @@
 
         .genie-particle { position: fixed; pointer-events: none; border-radius: 50%; background: var(--white-gold); z-index: 2000; filter: blur(2px); }
 
-        .credit-watermark { position: absolute; bottom: 15px; right: 10px; font-size: 10px; color: rgba(255, 255, 255, 0.4); font-weight: 500; letter-spacing: 1px; pointer-events: none; transform: translateZ(5px); }
-
         @media (max-width: 768px) { 
             .story-card { flex-direction: column; height: auto; } 
             .story-icon-area { width: 100%; height: 200px; border-right: none; border-bottom: 1px solid rgba(255,255,255,0.08); } 
@@ -142,6 +159,8 @@
     </style>
 </head>
 <body>
+
+    <div class="site-watermark">@its_um_ray</div>
 
     <div class="lang-switcher">
         <button onclick="changeLanguage('ja')">JP</button> | <button onclick="changeLanguage('en')">EN</button> | <button onclick="changeLanguage('zh')">ZH</button>
@@ -212,7 +231,6 @@
                         <div id="omamori-icon" class="sdg-icon">🌍</div>
                     </div>
                     <div class="knot"></div>
-                    <div class="credit-watermark">@its_um_ray</div>
                 </div>
             </div>
 
@@ -237,9 +255,14 @@
     </div>
 
     <script>
+        // スクロールでふわっと表示する設定
         const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('active'); });
-        }, { threshold: 0.3 });
+            entries.forEach(entry => { 
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active'); 
+                }
+            });
+        }, { threshold: 0.2 }); // 少し見えたらアニメーション開始
         document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
         const card = document.getElementById('omamori-card');
