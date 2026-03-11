@@ -94,6 +94,10 @@
         .intro-content h2 { font-size: clamp(3rem, 7vw, 5rem); margin-bottom: 50px; line-height: 1.1; }
         .intro-content p { font-size: 1.4rem; line-height: 2; color: var(--sub-text); margin-bottom: 30px; }
         
+        .background-problem-section { background-color: #fff; }
+        .problem-icon { font-size: 80px; margin-bottom: 30px; display: block; }
+        .highlight-text { color: #1d1d1f; font-weight: 600; }
+
         .reveal { 
             opacity: 0; transform: translateY(60px); filter: blur(15px); 
             transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -140,17 +144,14 @@
             will-change: transform;
         }
         
-        /* 本体レイヤー (Z: 0) */
         .omamori-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #1b263b; background-image: url('blue.jpg'); background-size: cover; background-position: center;
             clip-path: polygon(20% 0%, 80% 0%, 100% 15%, 100% 100%, 0% 100%, 0% 15%);
             transform: translateZ(0);
-            backface-visibility: hidden;
             z-index: 1;
         }
 
-        /* タグレイヤー (Z: 12px) - 現実的な浮き */
         .omamori-tag {
             position: absolute; top: 52%; left: 50%; 
             transform: translate(-50%, -50%) translateZ(12px); 
@@ -169,7 +170,6 @@
 
         .sdg-icon { font-size: 32px; margin-top: 15px; }
 
-        /* 結び目レイヤー (Z: 20px) */
         .knot { 
             position: absolute; top: 18px; left: 50%; 
             transform: translate(-50%, 0) translateZ(20px);
@@ -178,7 +178,6 @@
             z-index: 3;
         }
 
-        /* 反射レイヤー (Z: 22px) */
         .glare {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(105deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 70%);
@@ -187,7 +186,6 @@
             z-index: 4;
         }
         
-        /* 光エフェクト */
         .infusing-glow::after {
             content: '';
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -243,6 +241,15 @@
             <h2 class="gradient-title" data-i18n="intro_h2">伝統を、<br>未来のカタチへ。</h2>
             <p data-i18n="intro_p1">日本には、古くなったものを慈しみ、新しい命を吹き込む「もったいない」の精神があります。</p>
             <p data-i18n="intro_p2">私たちは、地域の衣類ゴミとして捨てられるはずだった布地を、世界中の人々を繋ぐ「お守り」へと生まれ変わらせます。</p>
+        </div>
+    </section>
+
+    <section class="intro-section background-problem-section">
+        <div class="intro-content reveal">
+            <span class="problem-icon">👘 → 🗑️</span>
+            <h2 data-i18n="prob_h2" style="font-weight: 700;">年間1兆円分の想いが、<br>捨てられています。</h2>
+            <p data-i18n="prob_p1">いま日本では、多くの着物がその価値を失い、行き場をなくしています。</p>
+            <p data-i18n="prob_p2" class="highlight-text">私たちは、その「捨てられゆく想い」を救い出し、新しい物語へと紡ぎ直します。</p>
         </div>
     </section>
 
@@ -332,16 +339,11 @@
         const scene = document.querySelector('.scene');
         let baseOrientation = { beta: null, gamma: null };
 
-        // マウス移動時の3D処理（PC用）
         function update3D(e) {
             const rect = scene.getBoundingClientRect();
-            const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2); // -1 to 1
-            const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2); // -1 to 1
-            
-            // 親要素を回転。内部の translateZ がある要素は勝手に浮いて見える
+            const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+            const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
             card.style.transform = `rotateX(${y * -15}deg) rotateY(${x * 15}deg)`;
-            
-            // 反射（Glare）は X軸方向に大きく動かす
             glare.style.transform = `translateZ(22px) translateX(${x * 50}%)`;
         }
         
@@ -351,7 +353,6 @@
             glare.style.transform = `translateZ(22px) translateX(-100%)`;
         });
 
-        // スマホのジャイロ用
         function handleOrientation(e) {
             if (!e.gamma || !e.beta) return;
             if (baseOrientation.beta === null) {
@@ -383,7 +384,6 @@
             document.getElementById('first-section').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // 横スクロールアニメーション
         const storyTrigger = document.getElementById('story-trigger');
         const horizontalTarget = document.getElementById('horizontal-target');
         window.addEventListener('scroll', () => {
@@ -401,7 +401,6 @@
             const omamori = document.getElementById('omamori-card');
             const wishText = document.getElementById('omamori-wish');
             if (!input.value.trim()) return;
-            
             omamori.classList.add('infusing-glow');
             wishText.style.opacity = '0';
             setTimeout(() => {
@@ -428,9 +427,9 @@
 
         function changeLanguage(lang) {
             const translations = {
-                ja: { subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", start_btn: "体験をスタート", sim_title: "Create Your Omamori", wish_env: "環境保護", ctrl_pattern: "Fabric Pattern", ctrl_custom: "Custom Wish", ctrl_save: "Export" },
-                en: { subtitle: "~ Upcycling waste into 'Global Wishes' ~", start_btn: "Start Experience", sim_title: "Create Your Omamori", wish_env: "Climate Action", ctrl_pattern: "Fabric Pattern", ctrl_custom: "Custom Wish", ctrl_save: "Export" },
-                zh: { subtitle: "〜将废材转化为“世界心愿”的升级再造〜", start_btn: "开始体验", sim_title: "Create Your Omamori", wish_env: "环境保护", ctrl_pattern: "布料图案", ctrl_custom: "定制心愿", ctrl_save: "保存图片" }
+                ja: { subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", start_btn: "体験をスタート", sim_title: "Create Your Omamori", wish_env: "環境保護", ctrl_pattern: "Fabric Pattern", ctrl_custom: "Custom Wish", ctrl_save: "Export", prob_h2: "年間1兆円分の想いが、<br>捨てられています。", prob_p1: "いま日本では、多くの着物がその価値を失い、行き場をなくしています。", prob_p2: "私たちは、その「捨てられゆく想い」を救い出し、新しい物語へと紡ぎ直します。" },
+                en: { subtitle: "~ Upcycling waste into 'Global Wishes' ~", start_btn: "Start Experience", sim_title: "Create Your Omamori", wish_env: "Climate Action", ctrl_pattern: "Fabric Pattern", ctrl_custom: "Custom Wish", ctrl_save: "Export", prob_h2: "One Trillion Yen of Memories,<br>Discarded Annually.", prob_p1: "In Japan today, countless kimonos are losing their place.", prob_p2: "We rescue these 'discarded emotions' and weave them into new stories." },
+                zh: { subtitle: "〜将废材转化为“世界心愿”的升级再造〜", start_btn: "开始体验", sim_title: "Create Your Omamori", wish_env: "环境保护", ctrl_pattern: "布料图案", ctrl_custom: "定制心愿", ctrl_save: "保存图片", prob_h2: "每年有价值1万亿日元的記憶，<br>正被遺棄。", prob_p1: "如今在日本，许多和服正在失去価値。", prob_p2: "我们拯救这些“被遗棄的情感”。" }
             };
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
