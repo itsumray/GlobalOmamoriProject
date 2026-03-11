@@ -43,8 +43,24 @@
         }
         .lang-switcher button { border: none; background: none; cursor: pointer; font-size: 13px; margin: 0 5px; font-weight: 500; color: var(--sub-text); transition: 0.3s; }
 
-        .gradient-title {
+        /* フローする（動く）グラデーションタイトル */
+        .flow-gradient-title {
             font-weight: 800; letter-spacing: -0.03em;
+            background: linear-gradient(135deg, #34c759, #30b0c7, #007aff, #34c759);
+            background-size: 300% 300%;
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            display: inline-block;
+            animation: gradientFlow 8s ease infinite;
+        }
+
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .gradient-title {
+            font-weight: 800; letter-spacing: -0.02em;
             background: var(--accent-gradient);
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             display: inline-block;
@@ -54,13 +70,11 @@
         .hero h1 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 8px; }
         .hero p { font-size: clamp(1rem, 3vw, 1.5rem); font-weight: 500; color: var(--sub-text); }
 
-        /* イントロ・新規背景セクション共通 */
         .intro-section { min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
         .intro-content { max-width: 900px; text-align: center; }
         .intro-content h2 { font-size: clamp(3rem, 7vw, 5rem); margin-bottom: 50px; line-height: 1.1; }
         .intro-content p { font-size: 1.4rem; line-height: 2; color: var(--sub-text); margin-bottom: 30px; }
         
-        /* ニュースを元にした背景セクション (Appleスタイル) */
         .background-problem-section { background-color: #fff; }
         .problem-icon { font-size: 80px; margin-bottom: 30px; display: block; }
         .highlight-text { color: #1d1d1f; font-weight: 600; }
@@ -109,14 +123,12 @@
             position: absolute; top: 52%; left: 50%; transform: translate(-50%, -50%) translateZ(15px);
             background-color: rgba(255, 255, 255, 0.95); width: 55%; padding: 30px 0; border-radius: 4px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: all 0.8s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.8s ease;
         }
 
         .omamori-text { 
             font-family: 'Noto Serif JP', serif; font-size: 26px; font-weight: 700; color: #1d1d1f; 
-            writing-mode: vertical-rl; text-orientation: upright; letter-spacing: 4px;
-            transition: all 0.8s ease;
+            writing-mode: vertical-rl; text-orientation: upright; letter-spacing: 4px; transition: all 0.8s ease;
         }
 
         .sdg-icon { font-size: 32px; margin-top: 20px; transition: 0.5s; }
@@ -161,7 +173,7 @@
     </div>
 
     <div class="hero">
-        <h1 class="gradient-title" data-i18n="title">Global Omamori Project</h1>
+        <h1 class="flow-gradient-title">Global Omamori Project</h1>
         <p data-i18n="subtitle">〜廃材を「世界の願い」に変えるアップサイクル〜</p>
     </div>
 
@@ -177,8 +189,8 @@
         <div class="intro-content reveal">
             <span class="problem-icon">👘 → 🗑️</span>
             <h2 data-i18n="prob_h2" style="font-weight: 700;">年間1兆円分の想いが、<br>捨てられています。</h2>
-            <p data-i18n="prob_p1">いま日本では、多くの着物がその価値を失い、行き場をなくしています。<br>災害時や実家の片付けで、「本当は大切にしたいのに」と涙をのんで手放される着物が後を絶ちません。</p>
-            <p data-i18n="prob_p2" class="highlight-text">私たちは、その「捨てられゆく想い」を救い出し、<br>世界中で愛される新しい物語へと紡ぎ直します。</p>
+            <p data-i18n="prob_p1">いま日本では、多くの着物がその価値を失い、行き場をなくしています。</p>
+            <p data-i18n="prob_p2" class="highlight-text">私たちは、その「捨てられゆく想い」を救い出し、新しい物語へと紡ぎ直します。</p>
         </div>
     </section>
 
@@ -191,8 +203,8 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                         </div>
                         <div class="story-text">
-                            <h2>1. 地域の廃材</h2>
-                            <p>捨てられる運命にあった着物の端切れやデッドストックを救い出します。</p>
+                            <h2 data-i18n="story1_h">1. 地域の廃材</h2>
+                            <p data-i18n="story1_p">捨てられる運命にあった着物の端切れやデッドストックを救い出します。</p>
                         </div>
                     </div>
                 </div>
@@ -202,8 +214,8 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"></path></svg>
                         </div>
                         <div class="story-text">
-                            <h2>2. アップサイクル</h2>
-                            <p>職人の手仕事とデザインの力で、新しい価値を持つプロダクトへ。</p>
+                            <h2 data-i18n="story2_h">2. アップサイクル</h2>
+                            <p data-i18n="story2_p">職人の手仕事とデザインの力で、新しい価値を持つプロダクトへ。</p>
                         </div>
                     </div>
                 </div>
@@ -213,8 +225,8 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                         </div>
                         <div class="story-text">
-                            <h2>3. 世界の願い</h2>
-                            <p>SDGsの想いを乗せて、国境を越え、次世代へと想いを繋ぎます。</p>
+                            <h2 data-i18n="story3_h">3. 世界の願い</h2>
+                            <p data-i18n="story3_p">SDGsの想いを乗せて、国境を越え、次世代へと想いを繋ぎます。</p>
                         </div>
                     </div>
                 </div>
@@ -223,7 +235,7 @@
     </div>
 
     <div class="simulator-section">
-        <h2 class="gradient-title" data-i18n="sim_title" style="font-size: 2.8rem; font-weight: 800;">Create Your Omamori</h2>
+        <h2 class="gradient-title" data-i18n="sim_title" style="font-size: 2.8rem;">Create Your Omamori</h2>
         <div class="simulator-container">
             <div class="scene">
                 <div class="omamori-wrapper" id="omamori-card">
@@ -246,7 +258,7 @@
                 </div>
                 <div class="control-group">
                     <h3 data-i18n="ctrl_custom">Custom Wish</h3>
-                    <input type="text" id="custom-wish-input" class="custom-input" placeholder="例：合格祈願 / 健康第一">
+                    <input type="text" id="custom-wish-input" class="custom-input" placeholder="例：合格祈願">
                     <button class="action-btn wish-btn" id="infuse-btn" onclick="infuseWish()">✨ お守りに願いを込める</button>
                 </div>
                 <div class="control-group">
@@ -295,62 +307,20 @@
 
         function infuseWish() {
             const input = document.getElementById('custom-wish-input');
-            const btn = document.getElementById('infuse-btn');
             const omamori = document.getElementById('omamori-card');
             const wishText = document.getElementById('omamori-wish');
             const wishIcon = document.getElementById('omamori-icon');
             if (input.value.trim() === "") return;
-
-            const bRect = btn.getBoundingClientRect();
-            const cRect = omamori.getBoundingClientRect();
-            const tx = cRect.left + cRect.width / 2;
-            const ty = cRect.top + cRect.height / 2;
-
-            for (let i = 0; i < 40; i++) { createLargeParticle(bRect, tx, ty); }
-
-            omamori.style.transition = 'all 1.2s cubic-bezier(0.5, 0, 0.2, 1)';
-            omamori.style.transform = 'scale(1.08) translateY(-20px)';
             
+            omamori.classList.add('infusing-glow');
+            wishText.style.opacity = '0';
             setTimeout(() => {
-                omamori.classList.add('infusing-glow');
-                wishText.style.filter = 'blur(15px) brightness(3)';
-                wishText.style.opacity = '0';
-                wishIcon.style.opacity = '0';
-
-                setTimeout(() => {
-                    wishText.innerText = input.value;
-                    wishText.removeAttribute('data-i18n');
-                    wishIcon.innerText = "✨";
-                    wishText.style.filter = 'blur(0) brightness(1)';
-                    wishText.style.opacity = '1';
-                    wishIcon.style.opacity = '1';
-                    
-                    setTimeout(() => { 
-                        omamori.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
-                        omamori.style.transform = 'scale(1) translateY(0) rotateX(0deg) rotateY(0deg)';
-                        omamori.classList.remove('infusing-glow');
-                    }, 500);
-                }, 300);
+                wishText.innerText = input.value;
+                wishText.removeAttribute('data-i18n');
+                wishIcon.innerText = "✨";
+                wishText.style.opacity = '1';
+                setTimeout(() => omamori.classList.remove('infusing-glow'), 1000);
             }, 1200);
-        }
-
-        function createLargeParticle(bRect, tx, ty) {
-            const p = document.createElement('div');
-            p.classList.add('genie-particle');
-            const size = Math.random() * 25 + 10;
-            const startX = bRect.left + bRect.width / 2;
-            const startY = bRect.top + bRect.height / 2;
-            p.style.width = `${size}px`; p.style.height = `${size}px`;
-            p.style.left = `${startX}px`; p.style.top = `${startY}px`;
-            document.body.appendChild(p);
-            const mx = startX + (Math.random() * 400 - 200);
-            const my = startY - (Math.random() * 300 + 100);
-            p.animate([
-                { left: `${startX}px`, top: `${startY}px`, opacity: 0, scale: 0 },
-                { left: `${mx}px`, top: `${my}px`, opacity: 0.9, scale: 1.8, offset: 0.4 },
-                { left: `${tx}px`, top: `${ty}px`, opacity: 0, scale: 0.1 }
-            ], { duration: 1200 + Math.random() * 800, easing: 'cubic-bezier(0.4, 0, 0.2, 1)', fill: 'forwards' });
-            setTimeout(() => p.remove(), 2000);
         }
 
         function saveOmamori() {
@@ -359,7 +329,7 @@
             target.style.transform = "rotateX(0deg) rotateY(0deg)";
             html2canvas(target, { useCORS: true, backgroundColor: null, scale: 3 }).then(canvas => {
                 const link = document.createElement('a');
-                link.download = 'my-omamori-by-ray.png';
+                link.download = 'my-omamori.png';
                 link.href = canvas.toDataURL();
                 link.click();
                 target.style.transform = originalTransform;
@@ -368,8 +338,45 @@
 
         function changeLanguage(lang) {
             const translations = {
-                ja: { title: "Global Omamori Project", subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", intro_h2: "伝統を、<br>未来のカタチへ。", intro_p1: "日本には、古くなったものを慈しみ、新しい命を吹き込む「もったいない」の精神があります。", intro_p2: "私たちは、地域の衣類ゴミとして捨てられるはずだった布地を、世界中の人々を繋ぐ「お守り」へと生まれ変わらせます。", prob_h2: "年間1兆円分の想いが、<br>捨てられています。", prob_p1: "いま日本では、多くの着物がその価値を失い、行き場をなくしています。<br>災害時や実家の片付けで、「本当は大切にしたいのに」と涙をのんで手放される着物が後を絶ちません。", prob_p2: "私たちは、その「捨てられゆく想い」を救い出し、<br>世界中で愛される新しい物語へと紡ぎ直します。", sim_title: "Create Your Omamori", wish_env: "環境保護" },
-                en: { title: "Global Omamori Project", subtitle: "~ Upcycling waste into 'Global Wishes' ~", intro_h2: "Tradition,<br>Reshaped for the Future.", intro_p1: "Japan has a spirit of 'Mottainai'—cherishing old things and breathing new life into them.", intro_p2: "We transform local textile waste into 'Omamori' (charms) that connect people across the globe.", prob_h2: "One Trillion Yen of Memories,<br>Discarded Annually.", prob_p1: "In Japan today, countless kimonos are losing their place and value.<br>From natural disasters to family inheritance, many are forced to let go of precious garments they wish to keep.", prob_p2: "We rescue these 'discarded emotions' and weave them into new stories loved worldwide.", sim_title: "Create Your Omamori", wish_env: "Climate Action" }
+                ja: { 
+                    subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", 
+                    intro_h2: "伝統を、<br>未来のカタチへ。", 
+                    intro_p1: "日本には、古くなったものを慈しみ、新しい命を吹き込む「もったいない」の精神があります。", 
+                    intro_p2: "私たちは、地域の衣類ゴミとして捨てられるはずだった布地を、世界中の人々を繋ぐ「お守り」へと生まれ変わらせます。",
+                    prob_h2: "年間1兆円分の想いが、<br>捨てられています。",
+                    prob_p1: "いま日本では、多くの着物がその価値を失い、行き場をなくしています。",
+                    prob_p2: "私たちは、その「捨てられゆく想い」を救い出し、新しい物語へと紡ぎ直します。",
+                    story1_h: "1. 地域の廃材", story1_p: "捨てられる運命にあった着物の端切れやデッドストックを救い出します。",
+                    story2_h: "2. アップサイクル", story2_p: "職人の手仕事とデザインの力で、新しい価値を持つプロダクトへ。",
+                    story3_h: "3. 世界の願い", story3_p: "SDGsの想いを乗せて、国境を越え、次世代へと想いを繋ぎます。",
+                    sim_title: "Create Your Omamori", wish_env: "環境保護", ctrl_pattern: "Fabric Pattern", ctrl_custom: "Custom Wish", ctrl_save: "Export"
+                },
+                en: { 
+                    subtitle: "~ Upcycling waste into 'Global Wishes' ~", 
+                    intro_h2: "Tradition,<br>Reshaped for the Future.", 
+                    intro_p1: "Japan has a spirit of 'Mottainai'—cherishing old things and breathing new life into them.", 
+                    intro_p2: "We transform local textile waste into 'Omamori' (charms) that connect people across the globe.",
+                    prob_h2: "One Trillion Yen of Memories,<br>Discarded Annually.",
+                    prob_p1: "In Japan today, countless kimonos are losing their place and value.",
+                    prob_p2: "We rescue these 'discarded emotions' and weave them into new stories.",
+                    story1_h: "1. Regional Waste", story1_p: "We rescue kimono scraps and deadstock destined for landfills.",
+                    story2_h: "2. Upcycle", story2_p: "Through craftsmanship and design, we breathe new life into discarded fabrics.",
+                    story3_h: "3. Global Wishes", story3_p: "Connecting hearts across borders with the spirit of sustainability.",
+                    sim_title: "Create Your Omamori", wish_env: "Climate Action", ctrl_pattern: "Fabric Pattern", ctrl_custom: "Custom Wish", ctrl_save: "Export"
+                },
+                zh: { 
+                    subtitle: "〜将废材转化为“世界心愿”的升级再造〜", 
+                    intro_h2: "让传统，<br>成为未来的形状。", 
+                    intro_p1: "日本拥有一种“惜物（Mottainai）”的精神，即珍惜旧物并赋予其新的生命。", 
+                    intro_p2: "我们将原本会被作为垃圾丢弃的地域废旧织物，重新打造成连接世界各地人们的“御守”。",
+                    prob_h2: "每年有价值1万亿日元的记忆，<br>正被遗弃。",
+                    prob_p1: "如今在日本，许多和服正在失去它们的价值和归宿。",
+                    prob_p2: "我们拯救这些“被遗弃的情感”，并将其重新编织成深受世界喜爱的故事。",
+                    story1_h: "1. 地区废材", story1_p: "拯救注定被丢弃的和服碎布和库存积压。",
+                    story2_h: "2. 升级再造", story2_p: "依靠工匠的手艺与设计的力量，打造具有新价值的产品。",
+                    story3_h: "3. 世界的心愿", story3_p: "承载SDGs的愿景，跨越国界，将情感传递给下一代。",
+                    sim_title: "Create Your Omamori", wish_env: "环境保护", ctrl_pattern: "布料图案", ctrl_custom: "定制心愿", ctrl_save: "保存图片"
+                }
             };
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
