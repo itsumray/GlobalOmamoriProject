@@ -69,6 +69,27 @@
         .hero h1 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 8px; }
         .hero p { font-size: clamp(1rem, 3vw, 1.5rem); font-weight: 500; color: var(--sub-text); }
 
+        /* 「体験をスタート」ボタンのスタイル */
+        .start-button {
+            margin-top: 40px;
+            padding: 18px 42px;
+            font-size: 16px;
+            font-weight: 700;
+            color: #fff;
+            background: #1d1d1f;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            letter-spacing: 0.05em;
+        }
+        .start-button:hover {
+            transform: translateY(-4px) scale(1.02);
+            background: #000;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+        }
+
         .intro-section { min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 80px 20px; }
         .intro-content { max-width: 900px; text-align: center; }
         .intro-content h2 { font-size: clamp(3rem, 7vw, 5rem); margin-bottom: 50px; line-height: 1.1; }
@@ -170,9 +191,10 @@
     <div class="hero">
         <h1 class="flow-gradient-title">Global Omamori Project</h1>
         <p data-i18n="subtitle">〜廃材を「世界の願い」に変えるアップサイクル〜</p>
+        <button class="start-button" id="start-btn" onclick="startExperience()" data-i18n="start_btn">体験をスタート</button>
     </div>
 
-    <section class="intro-section">
+    <section class="intro-section" id="first-section">
         <div class="intro-content reveal">
             <h2 class="gradient-title" data-i18n="intro_h2">伝統を、<br>未来のカタチへ。</h2>
             <p data-i18n="intro_p1">日本には、古くなったものを慈しみ、新しい命を吹き込む「もったいない」の精神があります。</p>
@@ -274,7 +296,7 @@
         const glare = document.getElementById('glare');
         const scene = document.querySelector('.scene');
         
-        // PC向けマウス追従
+        // PC向け
         function update3D(e) {
             const rect = scene.getBoundingClientRect();
             const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
@@ -288,18 +310,15 @@
             glare.style.transform = `translateX(-100%) translateZ(1px)`;
         });
 
-        // モバイル向け：ジャイロセンサーでの傾き検知
+        // モバイル向け
         function handleOrientation(e) {
             if (!e.gamma || !e.beta) return;
-            // 横持ち、縦持ちの補正：左右(gamma) -30~30, 前後(beta) 15~75(手に持った角度)を基準に
             const x = Math.max(-1, Math.min(1, e.gamma / 30)); 
             const y = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
-            
             card.style.transform = `rotateX(${y * -20}deg) rotateY(${x * 20}deg)`;
             glare.style.transform = `translateX(${x * 80}%) translateZ(1px)`;
         }
 
-        // センサー使用許可のリクエスト（iOS対策：ユーザーのアクションが必要）
         function requestSensorPermission() {
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
                 DeviceOrientationEvent.requestPermission()
@@ -311,6 +330,12 @@
             } else {
                 window.addEventListener('deviceorientation', handleOrientation);
             }
+        }
+
+        // 体験スタートボタンの関数
+        function startExperience() {
+            requestSensorPermission();
+            document.getElementById('first-section').scrollIntoView({ behavior: 'smooth' });
         }
 
         window.addEventListener('scroll', () => {
@@ -325,12 +350,12 @@
         });
 
         function changePattern(img) { 
-            requestSensorPermission(); // 変更時にも許可を試みる
+            requestSensorPermission();
             document.getElementById('omamori-bg').style.backgroundImage = `url('${img}')`; 
         }
 
         function infuseWish() {
-            requestSensorPermission(); // ボタンクリック時に許可リクエスト
+            requestSensorPermission();
             const input = document.getElementById('custom-wish-input');
             const omamori = document.getElementById('omamori-card');
             const wishText = document.getElementById('omamori-wish');
@@ -362,9 +387,11 @@
         }
 
         function changeLanguage(lang) {
+            requestSensorPermission();
             const translations = {
                 ja: { 
                     subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", 
+                    start_btn: "体験をスタート",
                     intro_h2: "伝統を、<br>未来のカタチへ。", 
                     intro_p1: "日本には、古くなったものを慈しみ、新しい命を吹き込む「もったいない」の精神があります。", 
                     intro_p2: "私たちは、地域の衣類ゴミとして捨てられるはずだった布地を、世界中の人々を繋ぐ「お守り」へと生まれ変わらせます。",
@@ -378,6 +405,7 @@
                 },
                 en: { 
                     subtitle: "~ Upcycling waste into 'Global Wishes' ~", 
+                    start_btn: "Start Experience",
                     intro_h2: "Tradition,<br>Reshaped for the Future.", 
                     intro_p1: "Japan has a spirit of 'Mottainai'—cherishing old things and breathing new life into them.", 
                     intro_p2: "We transform local textile waste into 'Omamori' (charms) that connect people across the globe.",
@@ -391,10 +419,11 @@
                 },
                 zh: { 
                     subtitle: "〜将废材转化为“世界心愿”的升级再造〜", 
+                    start_btn: "开始体验",
                     intro_h2: "让传统，<br>成为未来的形状。", 
                     intro_p1: "日本拥有一种“惜物（Mottainai）”的精神，即珍惜旧物并赋予其新的生命。", 
                     intro_p2: "我们将原本会被作为垃圾丢弃的地域废旧织物，重新打造成连接世界各地人们的“御守”。",
-                    prob_h2: "每年有价值1万亿日元的记忆，<br>正被遗弃。",
+                    prob_h2: "每年有价值1万亿日元的記憶，<br>正被遺棄。",
                     prob_p1: "如今在日本，许多和服正在失去它们的价值和归宿。",
                     prob_p2: "我们拯救这些“被遗弃的情感”，并将其重新编织成深受世界喜爱的故事。",
                     story1_h: "1. 地区废材", story1_p: "拯救注定被丢弃的和服碎布和库存积压。",
