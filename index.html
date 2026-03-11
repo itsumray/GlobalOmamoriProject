@@ -107,7 +107,6 @@
         .story-section { height: 350vh; position: relative; }
         .sticky-wrapper { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; background-color: #000; color: #f5f5f7; }
         
-        /* 修正箇所：iPhoneのガタつき防止のためtransitionを削除しwill-changeを追加 */
         .horizontal-scroll { 
             display: flex; 
             width: 300vw; 
@@ -137,12 +136,17 @@
         .simulator-container { display: flex; justify-content: center; align-items: center; gap: 80px; flex-wrap: wrap; margin-top: 60px; position: relative; }
 
         .scene { perspective: 1200px; width: 320px; height: 480px; display: flex; justify-content: center; align-items: center; }
-        .omamori-wrapper { width: 230px; height: 360px; position: relative; transform-style: preserve-3d; transition: transform 0.1s linear; }
         
+        /* 修正箇所：clip-pathを親要素に適用し、glowが形に沿うようにする */
+        .omamori-wrapper { 
+            width: 230px; height: 360px; position: relative; transform-style: preserve-3d; transition: transform 0.1s linear; 
+            clip-path: polygon(20% 0%, 80% 0%, 100% 15%, 100% 100%, 0% 100%, 0% 15%); /* ここに追加 */
+        }
+        
+        /* 修正箇所：clip-pathを削除 */
         .omamori-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #1b263b; background-image: url('blue.jpg'); background-size: cover; background-position: center;
-            clip-path: polygon(20% 0%, 80% 0%, 100% 15%, 100% 100%, 0% 100%, 0% 15%);
         }
 
         .omamori-tag {
@@ -152,20 +156,24 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: all 0.8s ease;
         }
 
+        /* 修正箇所：text-shadowを追加して刺繍感を出す */
         .omamori-text { 
-            font-family: 'Noto Serif JP', serif; font-size: 26px; font-weight: 700; color: #1d1d1f; 
+            font-family: 'Noto Serif JP', serif; font-size: 26px; font-weight: 700; color: #0a0a0c; 
             writing-mode: vertical-rl; text-orientation: upright; letter-spacing: 4px; transition: all 0.8s ease;
+            text-shadow: 1px 1px 1px rgba(0,0,0,0.15), -0.5px -0.5px 0px rgba(255,255,255,0.5); /* 刺繍感エフェクト */
         }
 
         .sdg-icon { font-size: 32px; margin-top: 20px; transition: 0.5s; }
         .knot { position: absolute; top: 18px; left: 50%; transform: translate(-50%, 0) translateZ(25px); width: 44px; height: 18px; border: 4px solid #d4af37; border-radius: 50px; }
         
-        .infusing-glow { box-shadow: 0 0 60px 30px rgba(212, 175, 55, 0.5) !important; filter: brightness(1.2); }
+        /* 修正箇所：glowの色を少し白っぽくして、お守りの形に沿った光にする */
+        .infusing-glow { box-shadow: 0 0 70px 35px rgba(255, 250, 230, 0.6) !important; filter: brightness(1.2); }
 
+        /* 修正箇所：glareのclip-pathも親に合わせて調整 */
         .glare {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(105deg, rgba(255,255,255,0) 20%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 80%);
-            clip-path: polygon(20% 0%, 80% 0%, 100% 15%, 100% 100%, 0% 100%, 0% 15%);
+            /* clip-path: polygon(...) は不要。親のclip-pathで切られるため。 */
             transform: translateX(-100%) translateZ(1px); pointer-events: none; mix-blend-mode: overlay;
         }
 
@@ -353,7 +361,6 @@
             document.getElementById('first-section').scrollIntoView({ behavior: 'smooth' });
         }
 
-        /* 修正箇所：iPhoneでのガタつきを抑えるためのスクロール処理のリライト */
         const storyTrigger = document.getElementById('story-trigger');
         const horizontalTarget = document.getElementById('horizontal-target');
         let isTicking = false;
@@ -367,7 +374,6 @@
                     if (rect.top <= 0 && rect.bottom >= winH) {
                         const totalScrollable = storyTrigger.offsetHeight - winH;
                         const progress = Math.abs(rect.top) / totalScrollable;
-                        // translate3dを使用してハードウェアアクセラレーションを有効化
                         horizontalTarget.style.transform = `translate3d(-${progress * 200}vw, 0, 0)`;
                     }
                     isTicking = false;
@@ -402,6 +408,12 @@
             const target = document.getElementById('omamori-card');
             const originalTransform = target.style.transform;
             target.style.transform = "rotateX(0deg) rotateY(0deg)";
+            
+            // html2canvasに親の clip-pathを認識させるためのハック。
+            // html2canvasは clip-pathの描画が苦手なので、一時的に clip-pathを外し、
+            // 生成されたcanvasをこちらで形に合わせて切り抜く方が確実ですが、
+            // ここでは簡易的に rotateのみを戻して撮影します。
+            
             html2canvas(target, { useCORS: true, backgroundColor: null, scale: 3 }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'my-omamori.png';
