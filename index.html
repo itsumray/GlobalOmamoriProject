@@ -106,7 +106,16 @@
 
         .story-section { height: 350vh; position: relative; }
         .sticky-wrapper { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; background-color: #000; color: #f5f5f7; }
-        .horizontal-scroll { display: flex; width: 300vw; height: 100%; transition: transform 0.1s linear; }
+        
+        /* 修正箇所：iPhoneのガタつき防止のためtransitionを削除しwill-changeを追加 */
+        .horizontal-scroll { 
+            display: flex; 
+            width: 300vw; 
+            height: 100%; 
+            transition: none; 
+            will-change: transform; 
+        }
+
         .story-panel { width: 100vw; height: 100%; display: flex; justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         
         .story-card {
@@ -295,10 +304,8 @@
         const glare = document.getElementById('glare');
         const scene = document.querySelector('.scene');
         
-        // 基準角度を保持する変数
         let baseOrientation = { beta: null, gamma: null };
 
-        // PC向け
         function update3D(e) {
             const rect = scene.getBoundingClientRect();
             const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
@@ -312,25 +319,17 @@
             glare.style.transform = `translateX(-100%) translateZ(1px)`;
         });
 
-        // モバイル向け（相対角度計算）
         function handleOrientation(e) {
             if (!e.gamma || !e.beta) return;
-
-            // 最初の一回目、またはボタンを押した瞬間の角度を基準にする
             if (baseOrientation.beta === null) {
                 baseOrientation.beta = e.beta;
                 baseOrientation.gamma = e.gamma;
                 return;
             }
-
-            // 基準点からの変化量を計算
             let diffX = e.gamma - baseOrientation.gamma;
             let diffY = e.beta - baseOrientation.beta;
-
-            // 角度の変化を一定範囲に制限（感度調整）
             const x = Math.max(-1, Math.min(1, diffX / 25)); 
             const y = Math.max(-1, Math.min(1, diffY / 25));
-            
             card.style.transform = `rotateX(${y * -25}deg) rotateY(${x * 25}deg)`;
             glare.style.transform = `translateX(${x * 80}%) translateZ(1px)`;
         }
@@ -349,22 +348,33 @@
         }
 
         function startExperience() {
-            // 基準角度をリセット（次のイベントで現在の角度をキャプチャさせる）
             baseOrientation = { beta: null, gamma: null };
             requestSensorPermission();
             document.getElementById('first-section').scrollIntoView({ behavior: 'smooth' });
         }
 
+        /* 修正箇所：iPhoneでのガタつきを抑えるためのスクロール処理のリライト */
+        const storyTrigger = document.getElementById('story-trigger');
+        const horizontalTarget = document.getElementById('horizontal-target');
+        let isTicking = false;
+
         window.addEventListener('scroll', () => {
-            const story = document.getElementById('story-trigger');
-            const target = document.getElementById('horizontal-target');
-            if (!story || !target) return;
-            const rect = story.getBoundingClientRect();
-            if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
-                const progress = Math.abs(rect.top) / (story.offsetHeight - window.innerHeight);
-                target.style.transform = `translateX(-${progress * 200}vw)`;
+            if (!isTicking) {
+                window.requestAnimationFrame(() => {
+                    const rect = storyTrigger.getBoundingClientRect();
+                    const winH = window.innerHeight;
+                    
+                    if (rect.top <= 0 && rect.bottom >= winH) {
+                        const totalScrollable = storyTrigger.offsetHeight - winH;
+                        const progress = Math.abs(rect.top) / totalScrollable;
+                        // translate3dを使用してハードウェアアクセラレーションを有効化
+                        horizontalTarget.style.transform = `translate3d(-${progress * 200}vw, 0, 0)`;
+                    }
+                    isTicking = false;
+                });
+                isTicking = true;
             }
-        });
+        }, { passive: true });
 
         function changePattern(img) { 
             document.getElementById('omamori-bg').style.backgroundImage = `url('${img}')`; 
