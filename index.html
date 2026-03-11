@@ -43,7 +43,6 @@
         }
         .lang-switcher button { border: none; background: none; cursor: pointer; font-size: 13px; margin: 0 5px; font-weight: 500; color: var(--sub-text); transition: 0.3s; }
 
-        /* フローする（動く）グラデーションタイトル */
         .flow-gradient-title {
             font-weight: 800; letter-spacing: -0.03em;
             background: linear-gradient(135deg, #34c759, #30b0c7, #007aff, #34c759);
@@ -85,7 +84,6 @@
         }
         .reveal.active { opacity: 1; transform: translateY(0); filter: blur(0); }
 
-        /* 横スクロールストーリー */
         .story-section { height: 350vh; position: relative; }
         .sticky-wrapper { position: sticky; top: 0; height: 100vh; overflow: hidden; display: flex; align-items: center; background-color: #000; color: #f5f5f7; }
         .horizontal-scroll { display: flex; width: 300vw; height: 100%; transition: transform 0.1s linear; }
@@ -106,12 +104,11 @@
         .story-text h2 { font-size: 3rem; margin-bottom: 24px; font-weight: 700; }
         .story-text p { font-size: 1.4rem; color: #a1a1a6; line-height: 1.6; }
 
-        /* シミュレーター */
         .simulator-section { min-height: 100vh; padding: 120px 20px; text-align: center; background: #fff;}
         .simulator-container { display: flex; justify-content: center; align-items: center; gap: 80px; flex-wrap: wrap; margin-top: 60px; position: relative; }
 
         .scene { perspective: 1200px; width: 320px; height: 480px; display: flex; justify-content: center; align-items: center; }
-        .omamori-wrapper { width: 230px; height: 360px; position: relative; transform-style: preserve-3d; transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .omamori-wrapper { width: 230px; height: 360px; position: relative; transform-style: preserve-3d; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
         
         .omamori-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -153,8 +150,6 @@
         .custom-input { padding: 14px; border-radius: 12px; border: 1px solid #d2d2d7; font-size: 14px; outline: none; transition: 0.3s; background: #fff; }
         .wish-btn { background: #1d1d1f !important; color: #fff !important; text-align: center !important; border: none !important; font-weight: 600 !important; }
         .save-btn-gradient { background: var(--accent-gradient) !important; color: #fff !important; border: none !important; text-align: center !important; font-weight: 700 !important; font-size: 16px !important; }
-
-        .genie-particle { position: fixed; pointer-events: none; border-radius: 50%; background: var(--white-gold); z-index: 2000; filter: blur(2px); }
 
         @media (max-width: 768px) { 
             .story-card { flex-direction: column; height: auto; } 
@@ -279,6 +274,7 @@
         const glare = document.getElementById('glare');
         const scene = document.querySelector('.scene');
         
+        // PC向けマウス追従
         function update3D(e) {
             const rect = scene.getBoundingClientRect();
             const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
@@ -292,6 +288,31 @@
             glare.style.transform = `translateX(-100%) translateZ(1px)`;
         });
 
+        // モバイル向け：ジャイロセンサーでの傾き検知
+        function handleOrientation(e) {
+            if (!e.gamma || !e.beta) return;
+            // 横持ち、縦持ちの補正：左右(gamma) -30~30, 前後(beta) 15~75(手に持った角度)を基準に
+            const x = Math.max(-1, Math.min(1, e.gamma / 30)); 
+            const y = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
+            
+            card.style.transform = `rotateX(${y * -20}deg) rotateY(${x * 20}deg)`;
+            glare.style.transform = `translateX(${x * 80}%) translateZ(1px)`;
+        }
+
+        // センサー使用許可のリクエスト（iOS対策：ユーザーのアクションが必要）
+        function requestSensorPermission() {
+            if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
+                DeviceOrientationEvent.requestPermission()
+                    .then(response => {
+                        if (response === 'granted') {
+                            window.addEventListener('deviceorientation', handleOrientation);
+                        }
+                    }).catch(console.error);
+            } else {
+                window.addEventListener('deviceorientation', handleOrientation);
+            }
+        }
+
         window.addEventListener('scroll', () => {
             const story = document.getElementById('story-trigger');
             const target = document.getElementById('horizontal-target');
@@ -303,9 +324,13 @@
             }
         });
 
-        function changePattern(img) { document.getElementById('omamori-bg').style.backgroundImage = `url('${img}')`; }
+        function changePattern(img) { 
+            requestSensorPermission(); // 変更時にも許可を試みる
+            document.getElementById('omamori-bg').style.backgroundImage = `url('${img}')`; 
+        }
 
         function infuseWish() {
+            requestSensorPermission(); // ボタンクリック時に許可リクエスト
             const input = document.getElementById('custom-wish-input');
             const omamori = document.getElementById('omamori-card');
             const wishText = document.getElementById('omamori-wish');
