@@ -94,10 +94,6 @@
         .intro-content h2 { font-size: clamp(3rem, 7vw, 5rem); margin-bottom: 50px; line-height: 1.1; }
         .intro-content p { font-size: 1.4rem; line-height: 2; color: var(--sub-text); margin-bottom: 30px; }
         
-        .background-problem-section { background-color: #fff; }
-        .problem-icon { font-size: 80px; margin-bottom: 30px; display: block; }
-        .highlight-text { color: #1d1d1f; font-weight: 600; }
-
         .reveal { 
             opacity: 0; transform: translateY(60px); filter: blur(15px); 
             transition: all 1.8s cubic-bezier(0.16, 1, 0.3, 1);
@@ -135,76 +131,78 @@
         .simulator-section { min-height: 100vh; padding: 120px 20px; text-align: center; background: #fff;}
         .simulator-container { display: flex; justify-content: center; align-items: center; gap: 80px; flex-wrap: wrap; margin-top: 60px; position: relative; }
 
-        .scene { perspective: 1200px; width: 320px; height: 480px; display: flex; justify-content: center; align-items: center; }
+        .scene { perspective: 1000px; width: 320px; height: 480px; display: flex; justify-content: center; align-items: center; }
         
-        /* お守り全体のラッパー（立体感のベース） */
         .omamori-wrapper { 
             width: 230px; height: 360px; position: relative; 
-            transform-style: preserve-3d; /* 内部要素を3D化 */
-            transition: transform 0.1s linear; 
+            transform-style: preserve-3d; 
+            transition: transform 0.1s ease-out; 
+            will-change: transform;
         }
         
-        /* お守りの布地部分（ここだけclip-pathで形を作る） */
+        /* 本体レイヤー (Z: 0) */
         .omamori-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #1b263b; background-image: url('blue.jpg'); background-size: cover; background-position: center;
             clip-path: polygon(20% 0%, 80% 0%, 100% 15%, 100% 100%, 0% 100%, 0% 15%);
+            transform: translateZ(0);
+            backface-visibility: hidden;
             z-index: 1;
         }
 
-        /* 浮き上がるタグ部分 */
+        /* タグレイヤー (Z: 12px) - 現実的な浮き */
         .omamori-tag {
             position: absolute; top: 52%; left: 50%; 
-            transform: translate(-50%, -50%) translateZ(40px); /* 40px浮かせる */
-            background-color: rgba(255, 255, 255, 0.96); width: 55%; padding: 30px 0; border-radius: 4px;
+            transform: translate(-50%, -50%) translateZ(12px); 
+            background-color: rgba(255, 255, 255, 0.98); width: 55%; padding: 30px 0; border-radius: 2px;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2); 
-            transition: all 0.8s ease;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15); 
+            transition: all 0.5s ease;
             z-index: 2;
         }
 
-        /* 文字の刺繍感エフェクト */
         .omamori-text { 
             font-family: 'Noto Serif JP', serif; font-size: 26px; font-weight: 700; color: #0a0a0c; 
-            writing-mode: vertical-rl; text-orientation: upright; letter-spacing: 4px; transition: all 0.8s ease;
-            text-shadow: 0.8px 0.8px 1px rgba(0,0,0,0.2), -0.5px -0.5px 0px rgba(255,255,255,0.4);
+            writing-mode: vertical-rl; text-orientation: upright; letter-spacing: 4px; 
+            text-shadow: 0.5px 0.5px 0.5px rgba(0,0,0,0.15), -0.2px -0.2px 0px rgba(255,255,255,0.3);
         }
 
-        .sdg-icon { font-size: 32px; margin-top: 20px; transition: 0.5s; }
+        .sdg-icon { font-size: 32px; margin-top: 15px; }
 
-        /* 浮き上がる金の輪っか */
+        /* 結び目レイヤー (Z: 20px) */
         .knot { 
             position: absolute; top: 18px; left: 50%; 
-            transform: translate(-50%, 0) translateZ(60px); /* タグよりさらに浮かせる */
-            width: 44px; height: 18px; border: 4px solid #d4af37; border-radius: 50px; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            transform: translate(-50%, 0) translateZ(20px);
+            width: 44px; height: 18px; border: 4.5px solid #d4af37; border-radius: 50px; 
+            box-shadow: 0 3px 8px rgba(0,0,0,0.2);
             z-index: 3;
         }
+
+        /* 反射レイヤー (Z: 22px) */
+        .glare {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(105deg, rgba(255,255,255,0) 30%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0) 70%);
+            clip-path: polygon(20% 0%, 80% 0%, 100% 15%, 100% 100%, 0% 100%, 0% 15%);
+            transform: translateZ(22px) translateX(-100%); pointer-events: none; mix-blend-mode: overlay;
+            z-index: 4;
+        }
         
-        /* 願いを込める時の光。お守りの形に沿いつつ、立体的に広がる */
+        /* 光エフェクト */
         .infusing-glow::after {
             content: '';
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle, rgba(255,250,230,0.8) 0%, rgba(212,175,55,0) 70%);
+            background: radial-gradient(circle, rgba(255,250,230,0.7) 0%, rgba(212,175,55,0) 70%);
             clip-path: polygon(20% 0%, 80% 0%, 100% 15%, 100% 100%, 0% 100%, 0% 15%);
-            filter: blur(20px);
-            animation: pulseGlow 1.5s ease-out;
+            filter: blur(15px);
+            animation: pulseGlow 1.2s ease-out;
             pointer-events: none;
             z-index: 0;
         }
 
         @keyframes pulseGlow {
-            0% { transform: scale(0.9) translateZ(-10px); opacity: 0; }
-            50% { transform: scale(1.2) translateZ(30px); opacity: 1; }
-            100% { transform: scale(1.4) translateZ(80px); opacity: 0; }
-        }
-
-        .glare {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(105deg, rgba(255,255,255,0) 20%, rgba(255,255,255,0.25) 50%, rgba(255,255,255,0) 80%);
-            clip-path: polygon(20% 0%, 80% 0%, 100% 15%, 100% 100%, 0% 100%, 0% 15%);
-            transform: translateX(-100%) translateZ(1px); pointer-events: none; mix-blend-mode: overlay;
-            z-index: 4;
+            0% { transform: scale(0.95) translateZ(-5px); opacity: 0; }
+            50% { transform: scale(1.05) translateZ(10px); opacity: 1; }
+            100% { transform: scale(1.1) translateZ(25px); opacity: 0; }
         }
 
         .controls { text-align: left; width: 100%; max-width: 340px; }
@@ -334,19 +332,26 @@
         const scene = document.querySelector('.scene');
         let baseOrientation = { beta: null, gamma: null };
 
+        // マウス移動時の3D処理（PC用）
         function update3D(e) {
             const rect = scene.getBoundingClientRect();
-            const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2);
-            const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2);
-            card.style.transform = `rotateX(${y * -20}deg) rotateY(${x * 20}deg)`;
-            glare.style.transform = `translateX(${x * 80}%) translateZ(1px)`;
+            const x = (e.clientX - rect.left - rect.width / 2) / (rect.width / 2); // -1 to 1
+            const y = (e.clientY - rect.top - rect.height / 2) / (rect.height / 2); // -1 to 1
+            
+            // 親要素を回転。内部の translateZ がある要素は勝手に浮いて見える
+            card.style.transform = `rotateX(${y * -15}deg) rotateY(${x * 15}deg)`;
+            
+            // 反射（Glare）は X軸方向に大きく動かす
+            glare.style.transform = `translateZ(22px) translateX(${x * 50}%)`;
         }
+        
         scene.addEventListener('mousemove', update3D);
         scene.addEventListener('mouseleave', () => {
             card.style.transform = `rotateX(0deg) rotateY(0deg)`;
-            glare.style.transform = `translateX(-100%) translateZ(1px)`;
+            glare.style.transform = `translateZ(22px) translateX(-100%)`;
         });
 
+        // スマホのジャイロ用
         function handleOrientation(e) {
             if (!e.gamma || !e.beta) return;
             if (baseOrientation.beta === null) {
@@ -356,20 +361,17 @@
             }
             let diffX = e.gamma - baseOrientation.gamma;
             let diffY = e.beta - baseOrientation.beta;
-            const x = Math.max(-1, Math.min(1, diffX / 25)); 
-            const y = Math.max(-1, Math.min(1, diffY / 25));
-            card.style.transform = `rotateX(${y * -25}deg) rotateY(${x * 25}deg)`;
-            glare.style.transform = `translateX(${x * 80}%) translateZ(1px)`;
+            const x = Math.max(-1, Math.min(1, diffX / 20)); 
+            const y = Math.max(-1, Math.min(1, diffY / 20));
+            card.style.transform = `rotateX(${y * -20}deg) rotateY(${x * 20}deg)`;
+            glare.style.transform = `translateZ(22px) translateX(${x * 50}%)`;
         }
 
         function requestSensorPermission() {
             if (typeof DeviceOrientationEvent !== 'undefined' && typeof DeviceOrientationEvent.requestPermission === 'function') {
-                DeviceOrientationEvent.requestPermission()
-                    .then(response => {
-                        if (response === 'granted') {
-                            window.addEventListener('deviceorientation', handleOrientation);
-                        }
-                    }).catch(console.error);
+                DeviceOrientationEvent.requestPermission().then(res => {
+                    if (res === 'granted') window.addEventListener('deviceorientation', handleOrientation);
+                });
             } else {
                 window.addEventListener('deviceorientation', handleOrientation);
             }
@@ -381,59 +383,41 @@
             document.getElementById('first-section').scrollIntoView({ behavior: 'smooth' });
         }
 
+        // 横スクロールアニメーション
         const storyTrigger = document.getElementById('story-trigger');
         const horizontalTarget = document.getElementById('horizontal-target');
-        let isTicking = false;
-
         window.addEventListener('scroll', () => {
-            if (!isTicking) {
-                window.requestAnimationFrame(() => {
-                    const rect = storyTrigger.getBoundingClientRect();
-                    const winH = window.innerHeight;
-                    if (rect.top <= 0 && rect.bottom >= winH) {
-                        const totalScrollable = storyTrigger.offsetHeight - winH;
-                        const progress = Math.abs(rect.top) / totalScrollable;
-                        horizontalTarget.style.transform = `translate3d(-${progress * 200}vw, 0, 0)`;
-                    }
-                    isTicking = false;
-                });
-                isTicking = true;
+            const rect = storyTrigger.getBoundingClientRect();
+            if (rect.top <= 0 && rect.bottom >= window.innerHeight) {
+                const progress = Math.abs(rect.top) / (storyTrigger.offsetHeight - window.innerHeight);
+                horizontalTarget.style.transform = `translate3d(-${progress * 200}vw, 0, 0)`;
             }
         }, { passive: true });
 
-        function changePattern(img) { 
-            document.getElementById('omamori-bg').style.backgroundImage = `url('${img}')`; 
-        }
+        function changePattern(img) { document.getElementById('omamori-bg').style.backgroundImage = `url('${img}')`; }
 
         function infuseWish() {
             const input = document.getElementById('custom-wish-input');
             const omamori = document.getElementById('omamori-card');
             const wishText = document.getElementById('omamori-wish');
-            const wishIcon = document.getElementById('omamori-icon');
-            if (input.value.trim() === "") return;
+            if (!input.value.trim()) return;
             
             omamori.classList.add('infusing-glow');
             wishText.style.opacity = '0';
             setTimeout(() => {
                 wishText.innerText = input.value;
                 wishText.removeAttribute('data-i18n');
-                wishIcon.innerText = "✨";
+                document.getElementById('omamori-icon').innerText = "✨";
                 wishText.style.opacity = '1';
                 setTimeout(() => omamori.classList.remove('infusing-glow'), 1500);
-            }, 1200);
+            }, 1000);
         }
 
         function saveOmamori() {
             const target = document.getElementById('omamori-card');
             const originalTransform = target.style.transform;
             target.style.transform = "rotateX(0deg) rotateY(0deg)";
-            
-            html2canvas(target, { 
-                useCORS: true, 
-                backgroundColor: null, 
-                scale: 3,
-                logging: false
-            }).then(canvas => {
+            html2canvas(target, { useCORS: true, backgroundColor: null, scale: 3 }).then(canvas => {
                 const link = document.createElement('a');
                 link.download = 'my-omamori.png';
                 link.href = canvas.toDataURL();
@@ -444,39 +428,9 @@
 
         function changeLanguage(lang) {
             const translations = {
-                ja: { 
-                    subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", 
-                    start_btn: "体験をスタート",
-                    intro_h2: "伝統を、<br>未来のカタチへ。", 
-                    intro_p1: "日本には、古くなったものを慈しみ、新しい命を吹き込む「もったいない」の精神があります。", 
-                    intro_p2: "私たちは、地域の衣類ゴミとして捨てられるはずだった布地を、世界中の人々を繋ぐ「お守り」へと生まれ変わらせます。",
-                    sim_title: "Create Your Omamori", wish_env: "環境保護", ctrl_pattern: "Fabric Pattern", ctrl_custom: "Custom Wish", ctrl_save: "Export",
-                    story1_h: "1. 地域の廃材", story1_p: "捨てられる運命にあった着物の端切れやデッドストックを救い出します。",
-                    story2_h: "2. アップサイクル", story2_p: "職人の手仕事とデザインの力で、新しい価値を持つプロダクトへ。",
-                    story3_h: "3. 世界の願い", story3_p: "SDGsの想いを乗せて、国境を越え、次世代へと想いを繋ぎます。"
-                },
-                en: { 
-                    subtitle: "~ Upcycling waste into 'Global Wishes' ~", 
-                    start_btn: "Start Experience",
-                    intro_h2: "Tradition,<br>Reshaped for the Future.", 
-                    intro_p1: "Japan has a spirit of 'Mottainai'—cherishing old things and breathing new life into them.", 
-                    intro_p2: "We transform local textile waste into 'Omamori' (charms) that connect people across the globe.",
-                    sim_title: "Create Your Omamori", wish_env: "Climate Action", ctrl_pattern: "Fabric Pattern", ctrl_custom: "Custom Wish", ctrl_save: "Export",
-                    story1_h: "1. Regional Waste", story1_p: "We rescue kimono scraps and deadstock destined for landfills.",
-                    story2_h: "2. Upcycle", story2_p: "Through craftsmanship and design, we breathe new life into discarded fabrics.",
-                    story3_h: "3. Global Wishes", story3_p: "Connecting hearts across borders with the spirit of sustainability."
-                },
-                zh: { 
-                    subtitle: "〜将废材转化为“世界心愿”的升级再造〜", 
-                    start_btn: "开始体验",
-                    intro_h2: "让传统，<br>成为未来的形状。", 
-                    intro_p1: "日本拥有一种“惜物（Mottainai）”的精神，即珍惜旧物并赋予其新的生命。", 
-                    intro_p2: "我们将原本会被作为垃圾丢棄的地域废旧织物，重新打造成连接世界各地人们的“御守”。",
-                    sim_title: "Create Your Omamori", wish_env: "环境保护", ctrl_pattern: "布料图案", ctrl_custom: "定制心愿", ctrl_save: "保存图片",
-                    story1_h: "1. 地区废材", story1_p: "拯救注定被丢弃的和服碎布和库存积压。",
-                    story2_h: "2. 升级再造", story2_p: "依靠工匠的手艺与设计的力量，打造具有新価値的产品。",
-                    story3_h: "3. 世界的心愿", story3_p: "承载SDGs的愿景，跨越国界，将情感传递给下一代。"
-                }
+                ja: { subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", start_btn: "体験をスタート", sim_title: "Create Your Omamori", wish_env: "環境保護", ctrl_pattern: "Fabric Pattern", ctrl_custom: "Custom Wish", ctrl_save: "Export" },
+                en: { subtitle: "~ Upcycling waste into 'Global Wishes' ~", start_btn: "Start Experience", sim_title: "Create Your Omamori", wish_env: "Climate Action", ctrl_pattern: "Fabric Pattern", ctrl_custom: "Custom Wish", ctrl_save: "Export" },
+                zh: { subtitle: "〜将废材转化为“世界心愿”的升级再造〜", start_btn: "开始体验", sim_title: "Create Your Omamori", wish_env: "环境保护", ctrl_pattern: "布料图案", ctrl_custom: "定制心愿", ctrl_save: "保存图片" }
             };
             document.querySelectorAll('[data-i18n]').forEach(el => {
                 const key = el.getAttribute('data-i18n');
