@@ -69,7 +69,6 @@
         .hero h1 { font-size: clamp(3rem, 8vw, 6rem); margin-bottom: 8px; }
         .hero p { font-size: clamp(1rem, 3vw, 1.5rem); font-weight: 500; color: var(--sub-text); }
 
-        /* 「体験をスタート」ボタンのスタイル */
         .start-button {
             margin-top: 40px;
             padding: 18px 42px;
@@ -129,7 +128,7 @@
         .simulator-container { display: flex; justify-content: center; align-items: center; gap: 80px; flex-wrap: wrap; margin-top: 60px; position: relative; }
 
         .scene { perspective: 1200px; width: 320px; height: 480px; display: flex; justify-content: center; align-items: center; }
-        .omamori-wrapper { width: 230px; height: 360px; position: relative; transform-style: preserve-3d; transition: transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .omamori-wrapper { width: 230px; height: 360px; position: relative; transform-style: preserve-3d; transition: transform 0.1s linear; }
         
         .omamori-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -296,6 +295,9 @@
         const glare = document.getElementById('glare');
         const scene = document.querySelector('.scene');
         
+        // 基準角度を保持する変数
+        let baseOrientation = { beta: null, gamma: null };
+
         // PC向け
         function update3D(e) {
             const rect = scene.getBoundingClientRect();
@@ -310,12 +312,26 @@
             glare.style.transform = `translateX(-100%) translateZ(1px)`;
         });
 
-        // モバイル向け
+        // モバイル向け（相対角度計算）
         function handleOrientation(e) {
             if (!e.gamma || !e.beta) return;
-            const x = Math.max(-1, Math.min(1, e.gamma / 30)); 
-            const y = Math.max(-1, Math.min(1, (e.beta - 45) / 30));
-            card.style.transform = `rotateX(${y * -20}deg) rotateY(${x * 20}deg)`;
+
+            // 最初の一回目、またはボタンを押した瞬間の角度を基準にする
+            if (baseOrientation.beta === null) {
+                baseOrientation.beta = e.beta;
+                baseOrientation.gamma = e.gamma;
+                return;
+            }
+
+            // 基準点からの変化量を計算
+            let diffX = e.gamma - baseOrientation.gamma;
+            let diffY = e.beta - baseOrientation.beta;
+
+            // 角度の変化を一定範囲に制限（感度調整）
+            const x = Math.max(-1, Math.min(1, diffX / 25)); 
+            const y = Math.max(-1, Math.min(1, diffY / 25));
+            
+            card.style.transform = `rotateX(${y * -25}deg) rotateY(${x * 25}deg)`;
             glare.style.transform = `translateX(${x * 80}%) translateZ(1px)`;
         }
 
@@ -332,8 +348,9 @@
             }
         }
 
-        // 体験スタートボタンの関数
         function startExperience() {
+            // 基準角度をリセット（次のイベントで現在の角度をキャプチャさせる）
+            baseOrientation = { beta: null, gamma: null };
             requestSensorPermission();
             document.getElementById('first-section').scrollIntoView({ behavior: 'smooth' });
         }
@@ -350,12 +367,10 @@
         });
 
         function changePattern(img) { 
-            requestSensorPermission();
             document.getElementById('omamori-bg').style.backgroundImage = `url('${img}')`; 
         }
 
         function infuseWish() {
-            requestSensorPermission();
             const input = document.getElementById('custom-wish-input');
             const omamori = document.getElementById('omamori-card');
             const wishText = document.getElementById('omamori-wish');
@@ -387,7 +402,6 @@
         }
 
         function changeLanguage(lang) {
-            requestSensorPermission();
             const translations = {
                 ja: { 
                     subtitle: "〜廃材を「世界の願い」に変えるアップサイクル〜", 
@@ -425,9 +439,9 @@
                     intro_p2: "我们将原本会被作为垃圾丢弃的地域废旧织物，重新打造成连接世界各地人们的“御守”。",
                     prob_h2: "每年有价值1万亿日元的記憶，<br>正被遺棄。",
                     prob_p1: "如今在日本，许多和服正在失去它们的价值和归宿。",
-                    prob_p2: "我们拯救这些“被遗弃的情感”，并将其重新编织成深受世界喜爱的故事。",
+                    prob_p2: "我们拯救这些“被遗棄的情感”，并将其重新编织成深受世界喜爱的故事。",
                     story1_h: "1. 地区废材", story1_p: "拯救注定被丢弃的和服碎布和库存积压。",
-                    story2_h: "2. 升级再造", story2_p: "依靠工匠的手艺与设计的力量，打造具有新价值的产品。",
+                    story2_h: "2. 升级再造", story2_p: "依靠工匠的手艺与设计的力量，打造具有新価値的产品。",
                     story3_h: "3. 世界的心愿", story3_p: "承载SDGs的愿景，跨越国界，将情感传递给下一代。",
                     sim_title: "Create Your Omamori", wish_env: "环境保护", ctrl_pattern: "布料图案", ctrl_custom: "定制心愿", ctrl_save: "保存图片"
                 }
